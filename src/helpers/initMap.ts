@@ -1,5 +1,7 @@
 import maplibregl, { GeoJSONSource, LngLatLike } from 'maplibre-gl'
-import { MAX_POINTS_WITH_FREE_API } from './constants'
+
+import { fetchRoute } from './api/fetchRoute'
+import { MAX_POINTS_WITH_FREE_API, THUNDERFOREST_API_KEY } from './constants'
 
 export const initMap = () => {
 	const map = new maplibregl.Map({
@@ -16,7 +18,7 @@ export const initMap = () => {
 				// },
 				cycle: {
 					type: 'raster',
-					tiles: ['https://tile.thunderforest.com/cycle/{z}/{x}/{y}@2x.png?apikey=7d9fefffc2984231af5a54c5e4ad0a83'],
+					tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}@2x.png?apikey=${THUNDERFOREST_API_KEY}`],
 					attribution: '&copy; OpenCycleMap'
 				}
 			},
@@ -75,7 +77,7 @@ export const initMap = () => {
 		})
 	})
 
-	map.on('click', function (e) {
+	map.on('click', async (e) => {
 		const coords: LngLatLike = [e.lngLat.lng, e.lngLat.lat]
 
 		geojson.geometry.coordinates.push(coords)
@@ -89,30 +91,14 @@ export const initMap = () => {
 			.addTo(map)
 
 		marker.on('dragend', () => {
-
 		})
 
 		if (geojson.geometry.coordinates.length < 2) {
 			return
 		}
 
-		fetch('https://graphhopper.com/api/1/route?key=cf3aac1d-11aa-4b05-9f56-c3b9c8103421', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				points: geojson.geometry.coordinates,
-				details: ['road_class', 'surface'],
-				vehicle: 'bike',
-				points_encoded: false,
-				instructions: false,
-			})
-		})
-		.then(res => res.json())
-		.then(data => {
-			console.log(data);
-			(map.getSource('route') as GeoJSONSource).setData(data.paths[0].points)
-		})
+		const data = await fetchRoute(geojson.geometry.coordinates)
+		console.log(data);
+		(map.getSource('route') as GeoJSONSource).setData(data.paths[0].points)
 	})
 }
