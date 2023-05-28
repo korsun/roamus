@@ -3,20 +3,14 @@ import maplibregl, { GeoJSONSource, LngLatLike } from 'maplibre-gl'
 import { fetchRoute } from './api/fetchRoute'
 import { MAX_POINTS_WITH_FREE_API, THUNDERFOREST_API_KEY } from './constants'
 import { getRetinaMod } from './getRetinaMod'
+import { getCurrentPosition } from './getCurrentPosition'
 
-export const initMap = () => {
+export const initMap = async () => {
 	const map = new maplibregl.Map({
 		container: 'map',
 		style: {
 			version: 8,
 			sources: {
-				// osm: {
-				// 	type: 'raster',
-				// 	tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
-				// 	tileSize: 256,
-				// 	attribution: '&copy; OpenStreetMap Contributors',
-				// 	maxzoom: 19
-				// },
 				cycle: {
 					type: 'raster',
 					tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`],
@@ -31,9 +25,9 @@ export const initMap = () => {
 				},
 			],
 		},
-		center: [16.424632, 45.750721],
+		center: await getCurrentPosition(),
 		hash: true,
-		zoom: 12
+		zoom: 13
 	})
 	map.addControl(
 		new maplibregl.NavigationControl({
