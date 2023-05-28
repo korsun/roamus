@@ -2,6 +2,7 @@ import maplibregl, { GeoJSONSource, LngLatLike } from 'maplibre-gl'
 
 import { fetchRoute } from './api/fetchRoute'
 import { MAX_POINTS_WITH_FREE_API, THUNDERFOREST_API_KEY } from './constants'
+import { getRetinaMod } from './getRetinaMod'
 
 export const initMap = () => {
 	const map = new maplibregl.Map({
@@ -18,7 +19,7 @@ export const initMap = () => {
 				// },
 				cycle: {
 					type: 'raster',
-					tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}@2x.png?apikey=${THUNDERFOREST_API_KEY}`],
+					tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`],
 					attribution: '&copy; OpenCycleMap'
 				}
 			},
