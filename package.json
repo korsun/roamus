@@ -1,0 +1,36 @@
+{
+  "name": "planning-poker-stars",
+  "version": "0.1.0",
+  "description": "Plan responsibly",
+  "main": "index.js",
+  "author": "Kirill Korsun <korsun.me@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "webpack serve --mode development",
+    "lint": "eslint ./src"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "css-loader": "^6.7.3",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-react": "^7.32.2",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.2",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.2",
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.12.0"
+  },
+  "dependencies": {
+    "maplibre-gl": "^2.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
