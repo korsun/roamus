@@ -1,7 +1,6 @@
-import { Position } from 'geojson'
 import { apiService } from '../../services/apiService'
 
-export const fetchRoute = async (coordinates: Position[]) =>
+export const fetchRoute = async (coordinates) =>
 	await apiService.post({
 		url: 'https://graphhopper.com/api/1/route',
 		payload: {

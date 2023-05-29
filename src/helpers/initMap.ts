@@ -14,8 +14,20 @@ export const initMap = async () => {
 				cycle: {
 					type: 'raster',
 					tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`],
-					attribution: '&copy; OpenCycleMap'
-				}
+					attribution: '&copy; OpenCycleMap',
+					tileSize: 512
+				},
+				// hillshading: {
+				// 	type: 'raster',
+				// 	tiles: ['https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.webp?key=ldgujGplx520Q0a3WG1f'],
+				// 	attribution: 'MapTiler'
+				// },
+				// trails: {
+				// 	type: 'raster',
+				// 	tiles: ['https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png'],
+				// 	attribution: 'WaymarkedTrails',
+				// 	tileSize: 512
+				// }
 			},
 			layers: [
 				{
@@ -23,6 +35,16 @@ export const initMap = async () => {
 					type: 'raster',
 					source: 'cycle'
 				},
+				// {
+				// 	id: 'hillshading',
+				// 	type: 'raster',
+				// 	source: 'hillshading'
+				// },
+				// {
+				// 	id: 'trails',
+				// 	type: 'raster',
+				// 	source: 'trails'
+				// }
 			],
 		},
 		center: await getCurrentPosition(),
@@ -43,9 +65,16 @@ export const initMap = async () => {
 		trackUserLocation: true
 	}))
 	
-	const geojson: GeoJSON.Feature<GeoJSON.LineString> = {
+	const geojson: GeoJSON.FeatureCollection = {
+		type: 'FeatureCollection',
+		features: []
+	}
+
+	const linestring: GeoJSON.Feature<GeoJSON.LineString> = {
 		type: 'Feature',
-		properties: {},
+		properties: {
+			name: 'route'
+		},
 		geometry: {
 			type: 'LineString',
 			coordinates: []
@@ -53,13 +82,23 @@ export const initMap = async () => {
 	}
 
 	map.on('load', function () {
-		map.addSource('route', {
+		map.addSource('geojson', {
 			type: 'geojson',
 			data: geojson
 		})
 		map.addLayer({
+			id: 'points',
+			type: 'circle',
+			source: 'geojson',
+			paint: {
+				'circle-radius': 10,
+				'circle-color': '#000'
+			},
+			filter: ['in', '$type', 'Point']
+		})
+		map.addLayer({
 			id: 'route',
-			source: 'route',
+			source: 'geojson',
 			type: 'line',
 			layout: {
 				'line-join': 'round',
@@ -68,32 +107,58 @@ export const initMap = async () => {
 			paint: {
 				'line-color': 'orange',
 				'line-width': 5
-			}
+			},
+			filter: ['in', '$type', 'LineString']
 		})
 	})
 
 	map.on('click', async (e) => {
-		const coords: LngLatLike = [e.lngLat.lng, e.lngLat.lat]
-
-		geojson.geometry.coordinates.push(coords)
-
-		if (geojson.geometry.coordinates.length > MAX_POINTS_WITH_FREE_API) {
-			return
-		}
-
-		const marker = new maplibregl.Marker({ draggable: true })
-			.setLngLat(coords)
-			.addTo(map)
-
-		marker.on('dragend', () => {
+		const features = map.queryRenderedFeatures(e.point, {
+			layers: ['points']
 		})
 
-		if (geojson.geometry.coordinates.length < 2) {
+		if (geojson.features.length > 1) geojson.features.pop()
+
+		const coords: LngLatLike = [e.lngLat.lng, e.lngLat.lat];
+
+		if (features.length) {
+			var id = features[0].properties.id
+			geojson.features = geojson.features.filter(function (point) {
+				return point.properties?.id !== id
+			});
+		} else {
+			const point: GeoJSON.Feature<GeoJSON.Point> = {
+				type: 'Feature',
+				properties: {
+					id: String(new Date().getTime())
+				},
+				geometry: {
+					type: 'Point',
+					coordinates: coords
+				}
+			}
+
+			geojson.features.push(point)
+		}
+
+		(map.getSource('geojson') as GeoJSONSource).setData(geojson)
+		
+		if (geojson.features.length > MAX_POINTS_WITH_FREE_API) {
 			return
 		}
 
-		const data = await fetchRoute(geojson.geometry.coordinates)
-		console.log(data);
-		(map.getSource('route') as GeoJSONSource).setData(data.paths[0].points)
+		if (geojson.features.length < 2) {
+			return
+		}
+
+		// @ts-ignore
+		const allCoords = geojson.features.map((point) => point.geometry.coordinates)
+
+		const data = await fetchRoute(allCoords)
+		console.log(data)
+		linestring.geometry = data.paths[0].points
+		geojson.features.push(linestring);
+		console.log(geojson);
+		(map.getSource('geojson') as GeoJSONSource).setData(geojson)
 	})
 }
