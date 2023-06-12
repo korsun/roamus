@@ -1,219 +1,108 @@
-import maplibregl, { MapMouseEvent, GeoJSONSource, LngLatLike } from 'maplibre-gl'
-
 import { fetchRoute } from './api/fetchRoute'
-import { MAX_POINTS_WITH_FREE_API, MAPTILER_API_KEY } from './constants'
+import { MAX_POINTS_WITH_FREE_API, MAPTILER_API_KEY, THUNDERFOREST_API_KEY } from './constants'
 import { getRetinaMod } from './getRetinaMod'
 import { getCurrentPosition } from './getCurrentPosition'
 
+import Map from 'ol/Map'
+// import OSM from 'ol/source/OSM.js'
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
+import { Vector as VectorSource, XYZ } from 'ol/source'
+import View from 'ol/View.js'
+import { useGeographic } from 'ol/proj.js'
+import { Draw, Modify, Snap, Select, defaults } from 'ol/interaction.js'
+import Point from 'ol/geom/Point.js'
+import GeoJSON from 'ol/format/GeoJSON.js'
+import { Icon, Style } from 'ol/style'
+
 export const initMap = async () => {
-	const map = new maplibregl.Map({
-		container: 'map',
+	useGeographic()
+	
+	const isRetina = Boolean(getRetinaMod())
+	const center = await getCurrentPosition()
+	const markersSource = new VectorSource()
+	const routeSource = new VectorSource()
+	const markersLayer = new VectorLayer({
+		source: markersSource,
+		style: new Style({
+			image: new Icon({
+				anchor: [0.5, 1],
+				src: 'https://raw.githubusercontent.com/maptiler/openlayers-samples/main/default-marker/marker-icon.png',
+			})
+		})
+	})
+	const routeLayer = new VectorLayer({
+		source: routeSource,
 		style: {
-			version: 8,
-			sources: {
-				// cycle: {
-				// 	type: 'raster',
-				// 	tiles: [`https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`],
-				// 	attribution: '&copy; OpenCycleMap',
-				// 	tileSize: 512
-				// },
-				maptiler: {
-					type: 'raster',
-					tiles: [`https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${MAPTILER_API_KEY}`],
-					attribution: '&copy; MapTiler',
-					tileSize: 512
-				},
-				// hillshading: {
-				// 	type: 'raster',
-				// 	tiles: [`https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.webp?key=${MAPTILER_API_KEY}`],
-				// 	attribution: 'MapTiler'
-				// },
-				trails: {
-					type: 'raster',
-					tiles: ['https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png'],
-					attribution: 'WaymarkedTrails',
-					tileSize: 256
-				}
-			},
-			layers: [
-				// {
-				// 	id: 'cycle',
-				// 	type: 'raster',
-				// 	source: 'cycle'
-				// },
-				{
-					id: 'maptiler',
-					type: 'raster',
-					source: 'maptiler'
-				},
-				// {
-				// 	id: 'hillshading',
-				// 	type: 'raster',
-				// 	source: 'hillshading'
-				// },
-				{
-					id: 'trails',
-					type: 'raster',
-					source: 'trails'
-				}
-			]
-		},
-		center: await getCurrentPosition(),
-		hash: true,
-		zoom: 13
-	})
-	
-	map.addControl(
-		new maplibregl.NavigationControl({
-			visualizePitch: true,
-			showZoom: true,
-			showCompass: true
-		})
-	)
-	map.addControl(new maplibregl.GeolocateControl({
-		positionOptions: {
-			enableHighAccuracy: true
-		},
-		trackUserLocation: true
-	}))
-	
-	const geojson: GeoJSON.FeatureCollection = {
-		type: 'FeatureCollection',
-		features: []
-	}
-
-	const linestring: GeoJSON.Feature<GeoJSON.LineString> = {
-		type: 'Feature',
-		properties: {
-			id: 'route'
-		},
-		geometry: {
-			type: 'LineString',
-			coordinates: []
+			'fill-color': 'rgba(255, 255, 255, 0.2)',
+			'stroke-color': 'red',
+			'stroke-width': 5,
 		}
-	}
+	})
+	const draw = new Draw({
+		source: markersSource,
+		type: 'Point',
+		condition: (e) => {
+			let shouldBeDrawn = true
 
-	map.on('load', () => {
-		map.addSource('geojson', {
-			type: 'geojson',
-			data: geojson
-		})
-		map.addLayer({
-			id: 'points',
-			type: 'circle',
-			source: 'geojson',
-			paint: {
-				'circle-radius': 5,
-				'circle-color': '#000'
-			},
-			filter: ['in', '$type', 'Point']
-		})
-		map.addLayer({
-			id: 'route',
-			source: 'geojson',
-			type: 'line',
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round'
-			},
-			paint: {
-				'line-color': 'orange',
-				'line-width': 5
-			},
-			filter: ['in', '$type', 'LineString']
-		})
+			map.forEachFeatureAtPixel(e.pixel,
+				() => shouldBeDrawn = false,
+				{
+					layerFilter: (l) => l === markersLayer
+				})
+			return shouldBeDrawn
+		},
+	})
+	const select = new Select()
+	const modify = new Modify({ source: markersSource })
+	const snap = new Snap({ source: markersSource })
+
+	const map = new Map({
+		layers: [
+			// new TileLayer({
+			// 	source: new OSM(),
+			// }),
+			new TileLayer({
+				source: new XYZ({
+					attributions: '&copy; MapTiler',
+					url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${MAPTILER_API_KEY}`,
+					tilePixelRatio: isRetina ? 2 : 1,
+				}),
+			}),
+			new TileLayer({
+				source: new XYZ({
+					attributions: '&copy; OpenCycleMap',
+					url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`,
+					tilePixelRatio: isRetina ? 2 : 1,
+				}),
+			}),
+			markersLayer,
+			routeLayer,
+		],
+		interactions: defaults().extend([draw, modify, snap, select]),
+		target: 'map',
+		view: new View({
+			center,
+			zoom: 15,
+		}),
 	})
 
-	let featId = ''
-	let move = false
+	const renderRoute = async () => {
+		const features = markersSource.getFeatures()
 
-	const onMove = (e: MapMouseEvent) => {
-		move = true
-		console.log('move')
-		const point = geojson.features.find((p) => p.properties?.id === featId)
-		
-		if (point) {
-			// @ts-ignore
-			point.geometry.coordinates = [e.lngLat.lng, e.lngLat.lat];
-			(map.getSource('geojson') as GeoJSONSource).setData(geojson)
-		}
-	}
+		if (features.length < 2 || features.length > MAX_POINTS_WITH_FREE_API) return
 
-	const unbind = () => {
-		console.log('unbind')
-		map.off('mousemove', onMove)
-		featId = ''
-	}
-
-	const onUp = async (e: MapMouseEvent) => {
-		console.log('up')
-		
-		if (geojson.features.length > 1) geojson.features.pop()
-
-		if (!move) {
-			if (featId) {
-				geojson.features = geojson.features.filter((point) => point.properties?.id !== featId)
-			} else {
-				const coords: LngLatLike = [e.lngLat.lng, e.lngLat.lat]
-				const point: GeoJSON.Feature<GeoJSON.Point> = {
-					type: 'Feature',
-					properties: {
-						id: String(new Date().getTime())
-					},
-					geometry: {
-						type: 'Point',
-						coordinates: coords
-					}
-				}
-
-				geojson.features.push(point)
-			}
-		}
-
-		if (geojson.features.length > MAX_POINTS_WITH_FREE_API) {
-			return
-		}
-
-		(map.getSource('geojson') as GeoJSONSource).setData(geojson)
-
-		if (geojson.features.length < 2) {
-			return
-		}
-
-		const allCoords = geojson.features
-			.filter((feature) => feature.geometry.type === 'Point')
-			// @ts-ignore
-			.map(item => item.geometry.coordinates)
-
-		if (allCoords.length < 2) return
-
-		const data = await fetchRoute(allCoords)
+		const coords = features.map(f => (f.getGeometry() as Point).getCoordinates())
+		const data = await fetchRoute(coords)
 		console.log(data)
-		linestring.geometry = data.paths[0].points
-		geojson.features.push(linestring);
-		(map.getSource('geojson') as GeoJSONSource).setData(geojson)
-		move = false
+		routeSource.clear()
+		routeSource.addFeatures(new GeoJSON().readFeatures(data.paths[0].points))
 	}
 
-	map.on('mousedown', (e: MapMouseEvent) => {
-		e.preventDefault()
-		const features = map.queryRenderedFeatures(e.point, {
-			layers: ['points']
-		})
-		console.log('feats', features)
-		featId = features[0]?.properties.id
-
-		map.on('mousemove', onMove)
-		map.on('mouseup', onUp)
-		map.once('mouseup', unbind)
+	markersSource.on('addfeature', () => {
+		renderRoute()
 	})
 
-	// https://github.com/mapbox/mapbox-gl-js/issues/1695
-	// hack for rachety zoom (integers only)
-	map.on('moveend', () => {
-		const zoom = Math.round(map.getZoom())
-		if (zoom !== map.getZoom()) {
-			map.setZoom(zoom)
-		}
+	modify.on('modifyend', () => {
+		renderRoute()
 	})
 }
