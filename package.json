@@ -1,7 +1,7 @@
 {
-  "name": "planning-poker-stars",
+  "name": "roamus",
   "version": "0.1.0",
-  "description": "Plan responsibly",
+  "description": "An outdoors maps and routing app",
   "main": "index.js",
   "author": "Kirill Korsun <korsun.me@gmail.com>",
   "license": "MIT",
