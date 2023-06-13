@@ -9,10 +9,13 @@ import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { Vector as VectorSource, XYZ } from 'ol/source'
 import View from 'ol/View.js'
 import { useGeographic } from 'ol/proj.js'
-import { Draw, Modify, Snap, Select, defaults } from 'ol/interaction.js'
+import { Draw, Modify, Snap, Select, defaults as defaultInteractions } from 'ol/interaction.js'
 import Point from 'ol/geom/Point.js'
 import GeoJSON from 'ol/format/GeoJSON.js'
 import { Icon, Style } from 'ol/style'
+import { ScaleLine, Zoom, Attribution } from 'ol/control.js'
+
+import s from '../App.module.css'
 
 export const initMap = async () => {
 	useGeographic()
@@ -78,7 +81,16 @@ export const initMap = async () => {
 			markersLayer,
 			routeLayer,
 		],
-		interactions: defaults().extend([draw, modify, snap, select]),
+		interactions: defaultInteractions().extend([draw, modify, snap, select]),
+		controls: [
+			new ScaleLine({
+				className: s.scaleLine
+			}),
+			new Zoom({
+				className: s.zoom
+			}),
+			new Attribution()
+		],
 		target: 'map',
 		view: new View({
 			center,
