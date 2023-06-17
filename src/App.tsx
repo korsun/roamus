@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react'
-import { initMap } from './helpers/initMap'
+import React from 'react'
 
-import s from './App.module.css'
+import { Map } from './components/Map/Map'
+import { SidePanel } from './components/SidePanel/SidePanel'
 
-export const App: React.FC = () => {
-
-	useEffect(() => {
-		initMap()
-	}, [])
-
-	return <div id='map' className={s.mapContainer} />
-}
+export const App = () => (
+	<>
+		<Map />
+		<SidePanel />
+	</>
+)

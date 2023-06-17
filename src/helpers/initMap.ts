@@ -1,4 +1,4 @@
-import { fetchRoute } from './api/fetchRoute'
+import { fetchRoute } from '../api/fetchRoute'
 import { MAX_POINTS_WITH_FREE_API, MAPTILER_API_KEY, THUNDERFOREST_API_KEY } from './constants'
 import { getRetinaMod } from './getRetinaMod'
 import { getCurrentPosition } from './getCurrentPosition'
@@ -17,7 +17,7 @@ import { ScaleLine, Zoom, Attribution } from 'ol/control.js'
 
 import s from '../App.module.css'
 
-export const initMap = async () => {
+export const initMap = async (setRoute) => {
 	useGeographic()
 	
 	const isRetina = Boolean(getRetinaMod())
@@ -106,8 +106,9 @@ export const initMap = async () => {
 		const coords = features.map(f => (f.getGeometry() as Point).getCoordinates())
 		const data = await fetchRoute(coords)
 		console.log(data)
+		setRoute(data)
 		routeSource.clear()
-		routeSource.addFeatures(new GeoJSON().readFeatures(data.paths[0].points))
+		routeSource.addFeatures(new GeoJSON().readFeatures(data.points))
 	}
 
 	markersSource.on('addfeature', () => {

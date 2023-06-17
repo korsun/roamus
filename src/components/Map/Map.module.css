@@ -1,0 +1,18 @@
+.mapContainer {
+	width: 100vw;
+	height: 100vh;
+}
+
+.zoom {
+	top: 0.5em;
+	right: 0.5em;
+}
+
+.scaleLine {
+	position: absolute;
+	bottom: 8px;
+	right: 8px;
+	padding: 2px;
+	background: var(--ol-partial-background-color);
+	border-radius: 4px;
+}
