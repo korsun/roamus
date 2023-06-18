@@ -10,9 +10,11 @@ export const getCurrentPosition = async () => {
 	try {
 		const { coords } = await getGeolocationPromisified()
 		currentPosition = [coords.longitude, coords.latitude]
-	} catch (e) {
-		// TODO: handle
-		console.error(e)
+	} catch (err) {
+		/**
+		 * @todo log
+		 */
+		console.error(err)
 	}
 
 	return currentPosition

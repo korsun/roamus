@@ -2,6 +2,11 @@
 	box-sizing: border-box;
 }
 
+:root {
+	--red: #f05542;
+	--light-red: #f7e0dd;
+}
+
 body {
 	margin: 0;
 	padding: 0;

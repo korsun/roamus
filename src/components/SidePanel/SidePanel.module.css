@@ -4,7 +4,7 @@
 	left: 0;
 	width: 360px;
 	height: 100vh;
-	transition: width 0.3s ease-out;
+	transition: left 0.3s ease-out;
 	box-shadow: rgba(0, 0, 0, 0.33) 0px 0px 12px 0px;
 }
 
@@ -36,11 +36,7 @@
 }
 
 .collapsed {
-	width: 0;
-}
-
-.collapsedPanel > div {
-	display: none;
+	left: -360px;
 }
 
 .icons {

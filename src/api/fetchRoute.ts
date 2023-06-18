@@ -1,9 +1,8 @@
 import { Coordinate } from 'ol/coordinate'
 import { apiService } from '../services/apiService'
 import GeoJSON from 'ol/format/GeoJSON'
-import { useStore } from '../hooks/useStore'
 
-type Path = {
+export type Path = {
 	distance: number
 	weight: number
 	time: number
@@ -79,7 +78,4 @@ export const fetchRoute = async (coordinates: Coordinate[]) => {
 		payload
 	})
 		.then((data: FetchRouteResponse) => data?.paths?.[0])
-		.catch((error: Error) => {
-			useStore.setState({ error: error.message })
-		})
 }

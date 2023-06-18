@@ -6,6 +6,7 @@ import { metresToKm, msToTime, ascDescToFixed } from '../../helpers/route'
 
 import { DistanceSvgr, TimeSvgr, AscendSvgr, DescendSvgr } from '../../assets/icons/index.svgr'
 import { RouteInfo } from '../RouteInfo/RouteInfo'
+import { Error } from '../Error/Error'
 
 import s from './SidePanel.module.css'
 
@@ -46,7 +47,7 @@ export const SidePanel = () => {
 						icon={<DescendSvgr />}
 					/>
 				</section>
-				<div>{error}</div>
+				<Error message={error} />
 			</div>
 			<button
 				className={s.collapseButton}

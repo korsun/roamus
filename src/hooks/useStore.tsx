@@ -1,12 +1,15 @@
 import { create } from 'zustand'
 
+import { Path } from '../api/fetchRoute'
+
 type Store = {
 	distance: number
 	time: number
 	ascend: number
 	descend: number
 	error?: string
-	setRoute: (store: Store) => void
+	setRoute: (path: Path) => void
+	setError: (err: string) => void
 }
 
 export const useStore = create<Store>()((set) => ({
@@ -20,5 +23,8 @@ export const useStore = create<Store>()((set) => ({
 		time,
 		ascend,
 		descend,
+	})),
+	setError: (error) => set(() => ({
+		error
 	})),
 }))
