@@ -36,10 +36,19 @@ const makeRequest = (method: Method) => async ({ url, payload, queryParams, head
 		}
 
 		const response = await fetch(urlToFetch, options)
+		const json = await response.json()
 
-		return await response.json()
+		if (!response.ok) {
+			throw new Error(json.message)
+		}
+
+		return await json
 	} catch (error) {
+		/**
+		 * @todo normal logging
+		 */
 		console.error(error)
+		throw error
 	}
 }
 

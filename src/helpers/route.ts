@@ -3,7 +3,7 @@ export const msToTime = (ms: number) => {
 
 	if (seconds === 0) return '0'
 
-	if (seconds < 60) return `${seconds}\u00A0s`
+	if (seconds < 60) return `${Math.round(seconds)}\u00A0s`
 
 	const minutes = Math.round(seconds / 60)
 

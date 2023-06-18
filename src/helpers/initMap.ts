@@ -106,6 +106,8 @@ export const initMap = async (setRoute) => {
 		const coords = features.map(f => (f.getGeometry() as Point).getCoordinates())
 		const data = await fetchRoute(coords)
 		console.log(data)
+		if (!data) return
+		
 		setRoute(data)
 		routeSource.clear()
 		routeSource.addFeatures(new GeoJSON().readFeatures(data.points))

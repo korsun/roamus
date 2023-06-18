@@ -11,7 +11,7 @@ import s from './SidePanel.module.css'
 
 export const SidePanel = () => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
-	const { distance, time, ascend, descend } = useStore()
+	const { distance, time, ascend, descend, error } = useStore()
 
 	const handleClick = () => {
 		setIsCollapsed(!isCollapsed)
@@ -46,6 +46,7 @@ export const SidePanel = () => {
 						icon={<DescendSvgr />}
 					/>
 				</section>
+				<div>{error}</div>
 			</div>
 			<button
 				className={s.collapseButton}

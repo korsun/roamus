@@ -5,6 +5,7 @@ type Store = {
 	time: number
 	ascend: number
 	descend: number
+	error?: string
 	setRoute: (store: Store) => void
 }
 
@@ -13,6 +14,7 @@ export const useStore = create<Store>()((set) => ({
 	time: 0,
 	ascend: 0,
 	descend: 0,
+	error: undefined,
 	setRoute: ({ distance, time, ascend, descend }) => set(() => ({
 		distance,
 		time,

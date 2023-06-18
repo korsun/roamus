@@ -1,6 +1,7 @@
 import { Coordinate } from 'ol/coordinate'
 import { apiService } from '../services/apiService'
 import GeoJSON from 'ol/format/GeoJSON'
+import { useStore } from '../hooks/useStore'
 
 type Path = {
 	distance: number
@@ -77,5 +78,8 @@ export const fetchRoute = async (coordinates: Coordinate[]) => {
 		url: 'https://graphhopper.com/api/1/route',
 		payload
 	})
-		.then((data: FetchRouteResponse) => data.paths[0])
+		.then((data: FetchRouteResponse) => data?.paths?.[0])
+		.catch((error: Error) => {
+			useStore.setState({ error: error.message })
+		})
 }
