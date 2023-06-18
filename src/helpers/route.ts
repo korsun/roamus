@@ -14,4 +14,4 @@ export const msToTime = (ms: number) => {
 
 export const metresToKm = (m: number) => m === 0 ? '0' : `${(m / 1000).toFixed(2)}\u00A0km`
 
-export const ascDescToFixed = (m: number) => m === 0 ? '0' : `${m.toFixed(2)}\u00A0m`
+export const ascDescToFixed = (m?: number) => m ? `${m.toFixed(2)}\u00A0m` : '0'

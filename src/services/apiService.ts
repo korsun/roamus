@@ -1,4 +1,4 @@
-import { GRAPHHOPER_API_KEY } from '../helpers/constants'
+import { GraphHopperLimitError } from './apiErrors'
 
 type Method =
 	| 'GET'
@@ -16,10 +16,7 @@ type Params = {
 const makeRequest = (method: Method) => async ({ url, payload, queryParams, headers }: Params) => {
 	try {
 		const enrichedHeaders = { ...headers }
-		const query = new URLSearchParams({
-			key: GRAPHHOPER_API_KEY,
-			...queryParams
-		}).toString()
+		const query = new URLSearchParams(queryParams).toString()
 		const slash = url.endsWith('/') ? '' : '/'
 		const urlToFetch = `${url}${slash}?${query}`
 
@@ -39,6 +36,10 @@ const makeRequest = (method: Method) => async ({ url, payload, queryParams, head
 		const json = await response.json()
 
 		if (!response.ok) {
+			if (urlToFetch.includes('graphhopper')) {
+				throw new GraphHopperLimitError(json.message, response.status)
+			}
+			
 			throw new Error(json.message)
 		}
 

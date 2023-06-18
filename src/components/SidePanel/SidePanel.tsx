@@ -7,12 +7,13 @@ import { metresToKm, msToTime, ascDescToFixed } from '../../helpers/route'
 import { DistanceSvgr, TimeSvgr, AscendSvgr, DescendSvgr } from '../../assets/icons/index.svgr'
 import { RouteInfo } from '../RouteInfo/RouteInfo'
 import { Error } from '../Error/Error'
+import { EngineSelect } from '../EngineSelect/EngineSelect'
 
 import s from './SidePanel.module.css'
 
 export const SidePanel = () => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
-	const { distance, time, ascend, descend, error } = useStore()
+	const { distance, time, ascend, descend, error, engine, limits, setEngine } = useStore()
 
 	const handleClick = () => {
 		setIsCollapsed(!isCollapsed)
@@ -25,7 +26,14 @@ export const SidePanel = () => {
 			<div className={classNames(s.panel, {
 				[s.collapsedPanel]: isCollapsed
 			})}>
-				<section className={s.icons}>
+				<section className={s.section}>
+					<EngineSelect
+						engine={engine}
+						setEngine={setEngine}
+						limits={limits}
+					/>
+				</section>
+				<section className={classNames(s.section, s.icons)}>
 					<RouteInfo
 						title='Distance'
 						text={metresToKm(distance)}

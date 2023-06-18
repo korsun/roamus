@@ -17,6 +17,7 @@ import { Icon, Style } from 'ol/style'
 import { ScaleLine, Zoom, Attribution } from 'ol/control.js'
 
 import s from '../components/Map/Map.module.css'
+import { GraphHopperLimitError } from '../services/apiErrors'
 
 export const useMap = () => {
 	const { setRoute, setError } = useStore()
@@ -114,7 +115,8 @@ export const useMap = () => {
 			const coords = features.map(f => (f.getGeometry() as Point).getCoordinates())
 
 			try {
-				const data = await fetchRoute(coords)
+				const { engine } = useStore.getState()
+				const data = await fetchRoute(coords, engine)
 				console.log(data)
 				if (!data) return
 
@@ -122,7 +124,7 @@ export const useMap = () => {
 				routeSource.clear()
 				routeSource.addFeatures(new GeoJSON().readFeatures(data.points))
 			} catch (err) {
-				if (err instanceof Error) {
+				if (err instanceof GraphHopperLimitError) {
 					setError(err.message)
 				}
 			}
