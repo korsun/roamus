@@ -23,7 +23,15 @@ export const useMap = () => {
 	const { setRoute, setError } = useStore()
 
 	useEffect(() => {
-		initMap()
+		let unsubscribe = () => {}
+
+		(async () => {
+			try {
+				unsubscribe = await initMap()
+			} catch (err) {}
+		})()
+
+		return unsubscribe
 	}, [])
 
 	const initMap = async () => {
@@ -107,6 +115,13 @@ export const useMap = () => {
 			}),
 		})
 
+		const unsubscribeFromDistance = useStore.subscribe((state) => state.distance, (distance) => {
+			if (distance === 0) {
+				routeSource.clear()
+				markersSource.clear()
+			}
+		})
+
 		const renderRoute = async () => {
 			const features = markersSource.getFeatures()
 
@@ -132,5 +147,7 @@ export const useMap = () => {
 
 		markersSource.on('addfeature', renderRoute)
 		modify.on('modifyend', renderRoute)
+
+		return unsubscribeFromDistance
 	}
 }

@@ -8,6 +8,11 @@
 	right: 0.5em;
 }
 
+.zoom > button {
+	height: 1.8em;
+	width: 1.8em;
+}
+
 .scaleLine {
 	position: absolute;
 	bottom: 8px;

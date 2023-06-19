@@ -13,7 +13,7 @@ import s from './SidePanel.module.css'
 
 export const SidePanel = () => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
-	const { distance, time, ascend, descend, error, engine, limits, setEngine } = useStore()
+	const { distance, time, ascend, descend, error, engine, limits, setEngine, setRoute } = useStore()
 
 	const handleClick = () => {
 		setIsCollapsed(!isCollapsed)
@@ -37,24 +37,30 @@ export const SidePanel = () => {
 					<RouteInfo
 						title='Distance'
 						text={metresToKm(distance)}
-						icon={<DistanceSvgr />}
+						icon={<DistanceSvgr size={32} />}
 					/>
 					<RouteInfo
 						title='Time'
 						text={msToTime(time)}
-						icon={<TimeSvgr />}
+						icon={<TimeSvgr size={32} />}
 					/>
 					<RouteInfo
 						title='Ascend'
 						text={ascDescToFixed(ascend)}
-						icon={<AscendSvgr />}
+						icon={<AscendSvgr size={32} />}
 					/>
 					<RouteInfo
 						title='Descend'
 						text={ascDescToFixed(descend)}
-						icon={<DescendSvgr />}
+						icon={<DescendSvgr size={32} />}
 					/>
 				</section>
+				
+				{Boolean(distance) && 
+				<section className={s.section}>
+					<button onClick={() => setRoute({ distance: 0, time: 0, ascend: 0, descend: 0 })}>Clear route</button>
+				</section>}
+				
 				<Error message={error} />
 			</div>
 			<button

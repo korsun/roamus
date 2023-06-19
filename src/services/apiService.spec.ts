@@ -1,15 +1,14 @@
 import { apiService } from './apiService'
-import { GRAPHHOPER_API_KEY } from '../helpers/constants'
 
 describe('apiService', () => {
 	fetchMock.mockResponse(JSON.stringify({ test: 'test' }))
 
-	it('Adds a graphhopper API key and necessary headers for a POST call', async () => {
+	it('Adds necessary headers for a POST call', async () => {
 		await apiService.post({
 			url: 'https://graphhopper-api-test.com',
 			payload: {},
 		})
-		expect(fetchMock).toBeCalledWith(`https://graphhopper-api-test.com/?key=${GRAPHHOPER_API_KEY}`, { "body": "{}", "headers": { "Content-Type": "application/json" }, "method": "POST" })
+		expect(fetchMock).toBeCalledWith(`https://graphhopper-api-test.com/?`, { "body": "{}", "headers": { "Content-Type": "application/json" }, "method": "POST" })
 	})
 
 	it('Merges necessary headers and queryParams with custom ones', async () => {
