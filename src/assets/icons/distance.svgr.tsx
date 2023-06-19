@@ -2,8 +2,8 @@ import * as React from "react";
 const SvgDistance = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={32}
-    height={32}
+    width={props.size}
+    height={props.size}
     fill="none"
     {...props}
   >

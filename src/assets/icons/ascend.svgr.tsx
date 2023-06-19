@@ -1,6 +1,6 @@
 import * as React from "react";
 const SvgAscend = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" width={props.size} height={props.size} {...props}>
     <g color="#000">
       <path
         fill="#cad1d8"

@@ -1,6 +1,6 @@
 import * as React from "react";
 const SvgTime = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" width={props.size} height={props.size} {...props}>
     <path
       fill="#3939aa"
       d="M16 19.82a1.5 1.5 0 0 1-1.5-1.5V14a1.5 1.5 0 0 1 3 0v4.36a1.5 1.5 0 0 1-1.5 1.46Z"
