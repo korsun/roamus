@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useStore } from '../hooks/useStore'
 import { fetchRoute } from '../api/fetchRoute'
-import { MAPTILER_API_KEY, THUNDERFOREST_API_KEY } from '../helpers/constants'
+import { /* MAPTILER_API_KEY, */ THUNDERFOREST_API_KEY } from '../helpers/constants'
 import { getCurrentPosition, getRetinaMod } from '../helpers'
 
 import Map from 'ol/Map'
@@ -18,6 +18,7 @@ import { ScaleLine, Zoom, Attribution } from 'ol/control.js'
 
 import s from '../components/Map/Map.module.css'
 import { GraphHopperLimitError } from '../services/apiErrors'
+import Marker from '../assets/icons/map-marker.svg'
 
 export const useMap = () => {
 	const { setRoute, setError } = useStore()
@@ -46,7 +47,7 @@ export const useMap = () => {
 			style: new Style({
 				image: new Icon({
 					anchor: [0.5, 1],
-					src: 'https://raw.githubusercontent.com/maptiler/openlayers-samples/main/default-marker/marker-icon.png',
+					src: Marker
 				})
 			})
 		})
@@ -81,13 +82,13 @@ export const useMap = () => {
 				// new TileLayer({
 				// 	source: new OSM(),
 				// }),
-				new TileLayer({
-					source: new XYZ({
-						attributions: '&copy; MapTiler',
-						url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${MAPTILER_API_KEY}`,
-						tilePixelRatio: isRetina ? 2 : 1,
-					}),
-				}),
+				// new TileLayer({
+				// 	source: new XYZ({
+				// 		attributions: '&copy; MapTiler',
+				// 		url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${MAPTILER_API_KEY}`,
+				// 		tilePixelRatio: isRetina ? 2 : 1,
+				// 	}),
+				// }),
 				new TileLayer({
 					source: new XYZ({
 						attributions: '&copy; OpenCycleMap',
@@ -95,8 +96,8 @@ export const useMap = () => {
 						tilePixelRatio: isRetina ? 2 : 1,
 					}),
 				}),
-				markersLayer,
 				routeLayer,
+				markersLayer,
 			],
 			interactions: defaultInteractions().extend([draw, modify, snap, select]),
 			controls: [
