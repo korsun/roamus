@@ -8,17 +8,17 @@ import Map from 'ol/Map'
 // import OSM from 'ol/source/OSM.js'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { Vector as VectorSource, XYZ } from 'ol/source'
-import View from 'ol/View.js'
-import { useGeographic } from 'ol/proj.js'
-import { Draw, Modify, Snap, Select, defaults as defaultInteractions } from 'ol/interaction.js'
-import Point from 'ol/geom/Point.js'
-import GeoJSON from 'ol/format/GeoJSON.js'
-import { Icon, Style } from 'ol/style'
-import { ScaleLine, Zoom, Attribution } from 'ol/control.js'
+import View from 'ol/View'
+import { useGeographic } from 'ol/proj'
+import { Draw, Modify, Snap, defaults as defaultInteractions } from 'ol/interaction'
+import GeoJSON from 'ol/format/GeoJSON'
+import { ScaleLine, Zoom, Attribution } from 'ol/control'
 
 import s from '../components/Map/Map.module.css'
 import { GraphHopperLimitError } from '../services/apiErrors'
-import Marker from '../assets/icons/map-marker.svg'
+import { Point } from 'ol/geom'
+import { startMarkerStyle, endMarkerStyle, interimMarkerStyle } from '../helpers/mapMarkerStyles'
+import { sortMarkersById } from '../helpers/route'
 
 export const useMap = () => {
 	const { setRoute, setError } = useStore()
@@ -44,12 +44,7 @@ export const useMap = () => {
 		const routeSource = new VectorSource()
 		const markersLayer = new VectorLayer({
 			source: markersSource,
-			style: new Style({
-				image: new Icon({
-					anchor: [0.5, 1],
-					src: Marker
-				})
-			})
+			style: startMarkerStyle,
 		})
 		const routeLayer = new VectorLayer({
 			source: routeSource,
@@ -62,18 +57,20 @@ export const useMap = () => {
 		const draw = new Draw({
 			source: markersSource,
 			type: 'Point',
+			style: {
+				'fill-color': 'none'
+			},
 			condition: (e) => {
 				let shouldBeDrawn = true
 
 				map.forEachFeatureAtPixel(e.pixel,
-					() => shouldBeDrawn = false,
-					{
-						layerFilter: (l) => l === markersLayer
-					})
+					() => shouldBeDrawn = false, {
+					layerFilter: (l) => l === markersLayer
+				})
 				return shouldBeDrawn
 			},
 		})
-		const select = new Select()
+
 		const modify = new Modify({ source: markersSource })
 		const snap = new Snap({ source: markersSource })
 
@@ -99,7 +96,7 @@ export const useMap = () => {
 				routeLayer,
 				markersLayer,
 			],
-			interactions: defaultInteractions().extend([draw, modify, snap, select]),
+			interactions: defaultInteractions().extend([draw, modify, snap]),
 			controls: [
 				new ScaleLine({
 					className: s.scaleLine
@@ -124,11 +121,11 @@ export const useMap = () => {
 		})
 
 		const renderRoute = async () => {
-			const features = markersSource.getFeatures()
+			const markers = markersSource.getFeatures().sort(sortMarkersById)
 
-			if (features.length < 2) return
+			if (markers.length < 2) return
 
-			const coords = features.map(f => (f.getGeometry() as Point).getCoordinates())
+			const coords = markers.map(f => (f.getGeometry() as Point).getCoordinates())
 
 			try {
 				const { engine } = useStore.getState()
@@ -146,7 +143,28 @@ export const useMap = () => {
 			}
 		}
 
-		markersSource.on('addfeature', renderRoute)
+		markersSource.on('addfeature', (e) => {
+			const markers = markersSource.getFeatures()
+
+			if (markers.length === 1) {
+				e.feature?.setId('marker_start')
+			} else {
+				e.feature?.setId('marker_end')
+				e.feature?.setStyle(endMarkerStyle)
+				markers.forEach((m, i) => {
+					if (i !== 0 && i !== markers.length - 1) {
+						m.setId('marker_middle_' + i)
+						m.setStyle(interimMarkerStyle)
+					}
+
+					if (i === markers.length - 1) {
+						m.setId('marker_end')
+						m.setStyle(endMarkerStyle)
+					}
+				})
+			}
+			renderRoute()
+		})
 		modify.on('modifyend', renderRoute)
 
 		return unsubscribeFromDistance

@@ -102,11 +102,11 @@ export const fetchRoute = async (coordinates: Coordinate[], engine: Engine = 'op
 		case 'graphhopper':
 			payload = {
 				points: coordinates,
-				details: ['road_class', 'surface'],
+				// details: ['road_class', 'surface'],
 				profile: 'bike',
 				points_encoded: false,
 				instructions: false,
-				optimize: 'true',
+				optimize: 'false',
 			}
 
 			return await apiService.post({
@@ -123,6 +123,7 @@ export const fetchRoute = async (coordinates: Coordinate[], engine: Engine = 'op
 			payload = {
 				coordinates,
 				elevation: true,
+				instructions: false,
 			}
 			return await apiService.post({
 				url: 'https://api.openrouteservice.org/v2/directions/cycling-road/geojson',

@@ -1,3 +1,5 @@
+import { FeatureLike } from 'ol/Feature'
+
 export const msToTime = (ms: number) => {
 	const seconds = ms / 1000
 
@@ -15,3 +17,15 @@ export const msToTime = (ms: number) => {
 export const metresToKm = (m: number) => m === 0 ? '0' : `${(m / 1000).toFixed(2)}\u00A0km`
 
 export const ascDescToFixed = (m?: number) => m ? `${m.toFixed(2)}\u00A0m` : '0'
+
+export const sortMarkersById = (a: FeatureLike, b: FeatureLike) => {
+		if (a.getId()! > b.getId()!) {
+			return -1
+		}
+
+		if (a.getId()! < b.getId()!) {
+			return 1
+		}
+
+		return 0
+	}
