@@ -10,8 +10,8 @@ import { GraphHopperPayload, GraphHopperResponse, ORSPayload, ORSResponse } from
  */
 export const buildRoute = asyncHandler((req: Request, res: Response) => {
 	let payload: GraphHopperPayload | ORSPayload
-	let result
 	const { engine, coordinates } = req.body
+	let result
 
 	switch (engine) {
 		case 'graphhopper':
@@ -78,10 +78,10 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
 				})
 	}
 
-	if (result) {
-		res.status(200).json(result)
-	} else {
+	result.then((data: ORSResponse | GraphHopperResponse) => {
+		res.status(200).json(data)
+	}).catch((err: Error) => {
 		res.status(400)
-		throw new Error('Something wrong')
-	}
+		throw new Error(err.message)
+	})
 })
