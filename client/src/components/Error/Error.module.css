@@ -1,0 +1,8 @@
+.message {
+  margin-top: 20px;
+  padding: 5px;
+  color: var(--red);
+  background-color: var(--light-red);
+  border-radius: 3px;
+  border: 1px solid var(--red);
+}

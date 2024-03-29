@@ -1,23 +1,23 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"lib": [
-			"es6",
-			"es7",
-			"es2017",
-			"dom"
-		],
-		"module": "esnext",
-		"moduleResolution": "node",
-		"jsx": "react",
-		"sourceMap": true,
-		"strict": true,
-		"importHelpers": true,
-		"skipLibCheck": true,
-		"allowSyntheticDefaultImports": true,
-		"noImplicitAny": false,
-		"noImplicitReturns": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true
-	}
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es6", "es7", "es2017", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "sourceMap": false,
+    "strict": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["client/src/*", "server/src/*"],
+      "@common/*": ["common/*"]
+    }
+  }
 }

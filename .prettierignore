@@ -1,0 +1,10 @@
+node_modules/
+client/dist/
+client/public/
+server/dist/
+testing/
+.husky
+yarn.lock
+README.md
+.gitignore
+.github/
