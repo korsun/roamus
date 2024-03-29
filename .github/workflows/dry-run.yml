@@ -36,7 +36,7 @@ jobs:
       run: yarn lint
 
     - name: Build server
-      run: yarn build:server --if-present
+      run: yarn build:server
 
     - name: Build client
-      run: yarn build:client --if-present
+      run: yarn build:client
