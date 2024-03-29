@@ -15,7 +15,7 @@
     "lint": "tsc && eslint --report-unused-disable-directives --max-warnings 0",
     "test": "jest --config='./testing/jest.config.js'",
     "prettier": "prettier --write .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
