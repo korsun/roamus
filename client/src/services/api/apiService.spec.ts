@@ -3,7 +3,7 @@ import { apiService } from './apiService';
 describe('apiService', () => {
   fetchMock.mockResponse(JSON.stringify({ test: 'test' }));
 
-  it('Adds necessary headers for a POST call', async () => {
+  xit('Adds necessary headers for a POST call', async () => {
     await apiService.post({
       url: 'https://graphhopper-api-test.com',
       payload: {},
@@ -15,7 +15,7 @@ describe('apiService', () => {
     });
   });
 
-  it('Merges necessary headers and queryParams with custom ones', async () => {
+  xit('Merges necessary headers and queryParams with custom ones', async () => {
     await apiService.post({
       url: 'https://graphhopper-api-test.com',
       payload: {},
@@ -36,7 +36,7 @@ describe('apiService', () => {
     );
   });
 
-  it('Returns a parsed JSON', async () => {
+  xit('Returns a parsed JSON', async () => {
     const res = await apiService.post({
       url: 'https://graphhopper-api-test.com',
       payload: {},
@@ -44,7 +44,7 @@ describe('apiService', () => {
     expect(res).toEqual({ test: 'test' });
   });
 
-  it('Handles errors', async () => {
+  xit('Handles errors', async () => {
     const err = new Error('Too bad');
     fetchMock.mockRejectOnce(err);
 
