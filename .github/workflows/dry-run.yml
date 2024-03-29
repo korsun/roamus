@@ -19,17 +19,17 @@ jobs:
         cache: 'yarn'
 
     - name: Install deps
-        run: yarn --frozen-lockfile
-        env:
-          GRAPHHOPER_API_KEY: ${{ secrets.GRAPHHOPER_API_KEY }}
-          OPENROUTESERVICE_API_KEY: ${{ secrets.OPENROUTESERVICE_API_KEY }}
-          GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
-          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
-          MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
+      run: yarn --frozen-lockfile
+      env:
+        GRAPHHOPER_API_KEY: ${{ secrets.GRAPHHOPER_API_KEY }}
+        OPENROUTESERVICE_API_KEY: ${{ secrets.OPENROUTESERVICE_API_KEY }}
+        GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
+        THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+        MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
 
     - name: Lint
-        run: yarn lint
+      run: yarn lint
 
     - name: Build
-        run: yarn build:server --if-present
-        run: yarn build:client --if-present
+      run: yarn build:server --if-present
+      run: yarn build:client --if-present
