@@ -9,7 +9,7 @@
 		],
 		"module": "esnext",
 		"moduleResolution": "node",
-		"jsx": "react",
+		"jsx": "react-jsx",
 		"sourceMap": true,
 		"strict": true,
 		"importHelpers": true,
@@ -18,6 +18,16 @@
 		"noImplicitAny": false,
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true
+		"noUnusedParameters": true,
+		"baseUrl": "./",
+		"paths": {
+			"@/*": [
+				"client/src/*",
+				"server/src/*"
+			],
+			"@common/*": [
+				"common/*"
+			]
+		}
 	}
 }

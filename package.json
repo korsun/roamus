@@ -1,16 +1,18 @@
 {
   "name": "roamus",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An outdoors maps and routing app",
-  "main": "index.js",
+  "main": "server/index.js",
   "author": "Kirill Korsun <korsun.me@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production",
-    "start": "webpack serve --mode development",
-    "lint": "eslint ./src",
+    "build:server": "webpack --mode development --config server/webpack.server.js",
+    "start:server": "node server/dist/server.js",
+    "build:client": "webpack --mode development --config client/webpack.client.js",
+    "start:client": "webpack serve --mode development --config client/webpack.client.js",
     "build:svg": "svgr -d . . --filename-case kebab --ext 'svgr.tsx'",
+    "lint": "eslint .",
     "test": "jest --config='./testing/jest.config.js'"
   },
   "devDependencies": {
@@ -33,10 +35,15 @@
     "typescript": "^5.0.2",
     "webpack": "^5.76.2",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.12.0"
+    "webpack-dev-server": "^4.12.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "classnames": "^2.3.2",
+    "cors": "^2.8.5",
+    "cross-fetch": "^3.1.6",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "ol": "^7.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
