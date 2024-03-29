@@ -1,11 +1,11 @@
-import s from './Error.module.css'
+import s from './Error.module.css';
 
 type Props = {
-	message?: string
-}
+  message?: string;
+};
 
 export const Error = ({ message }: Props) => {
-	if (!message) return null
+  if (!message) return null;
 
-	return <div className={s.message}>{message}</div>
-}
+  return <div className={s.message}>{message}</div>;
+};

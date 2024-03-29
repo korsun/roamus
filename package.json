@@ -14,8 +14,9 @@
     "build:svg": "svgr -d . . --filename-case kebab --ext 'svgr.tsx'",
     "lint": "tsc && eslint --report-unused-disable-directives --max-warnings 0",
     "test": "jest --config='./testing/jest.config.js'",
-		"prepare": "husky install",
-		"pre-commit": "lint-staged"
+    "prettier": "prettier --write .",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "devDependencies": {
     "@svgr/cli": "^8.0.1",

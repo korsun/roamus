@@ -1,8 +1,8 @@
-import { Router } from 'express'
-import { buildRoute } from '@/controllers/routing'
+import { Router } from 'express';
+import { buildRoute } from '@/controllers/routing';
 
-const router = Router()
+const router = Router();
 
-router.route('/routing').post(buildRoute)
+router.route('/routing').post(buildRoute);
 
-export const routing = router
+export const routing = router;

@@ -1,10 +1,10 @@
-import { Map, SidePanel } from '@/components'
+import { Map, SidePanel } from '@/components';
 
-import './App.module.css'
+import './App.module.css';
 
 export const App = () => (
-	<>
-		<Map />
-		<SidePanel />
-	</>
-)
+  <>
+    <Map />
+    <SidePanel />
+  </>
+);

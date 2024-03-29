@@ -1,1 +1,1 @@
-export { RouteInfo } from './RouteInfo'
+export { RouteInfo } from './RouteInfo';

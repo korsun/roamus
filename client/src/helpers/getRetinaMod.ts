@@ -1,1 +1,1 @@
-export const getRetinaMod = () => devicePixelRatio > 1 ? '@2x' : ''
+export const getRetinaMod = () => (devicePixelRatio > 1 ? '@2x' : '');
