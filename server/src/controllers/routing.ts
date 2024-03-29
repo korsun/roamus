@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import fetch from 'cross-fetch'
 import asyncHandler from 'express-async-handler'
-import { GRAPHHOPER_API_KEY, OPENROUTESERVICE_API_KEY } from '../../../client/src/helpers/constants'
+
 import { GraphHopperPayload, GraphHopperResponse, ORSPayload, ORSResponse } from '@common/types'
 
 /**
@@ -24,7 +24,12 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
 				optimize: 'false',
 			}
 
-			result = fetch(`https://graphhopper.com/api/1/route/?key=${GRAPHHOPER_API_KEY}`, {
+			if (!process.env.GRAPHHOPER_API_KEY) {
+				res.status(400)
+				throw new Error('Missing GraphHopper API key')
+			}
+
+			result = fetch(`https://graphhopper.com/api/1/route/?key=${process.env.GRAPHHOPER_API_KEY}`, {
 				method: 'post',
 				body: JSON.stringify(payload),
 				headers: {
@@ -44,12 +49,17 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
 				instructions: false,
 			}
 
+			if (!process.env.OPENROUTESERVICE_API_KEY) {
+				res.status(400)
+				throw new Error('Missing OpenRouteService API key')
+			}
+
 			result = fetch('https://api.openrouteservice.org/v2/directions/cycling-road/geojson', {
 				method: 'post',
 				body: JSON.stringify(payload),
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': OPENROUTESERVICE_API_KEY,
+					'Authorization': process.env.OPENROUTESERVICE_API_KEY,
 				},
 			})
 				.then((raw) => raw.json())

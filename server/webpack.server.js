@@ -1,10 +1,11 @@
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
 	context: __dirname,
 	target: 'node',
-	entry: './server',
+	entry: './src/server',
 	output: {
 		filename: 'server.js',
 		path: path.resolve(__dirname, 'dist'),
@@ -13,6 +14,9 @@ module.exports = {
 
 	externals: [
 		nodeExternals()
+	],
+	plugins: [
+		new Dotenv()
 	],
 	devtool: 'inline-source-map',
 	module: {
@@ -26,7 +30,7 @@ module.exports = {
 	resolve: {
 		extensions: ['.ts', '.js'],
 		alias: {
-			'@': path.resolve(__dirname, 'server/src'),
+			'@': path.resolve(__dirname, 'src'),
 			'@common': path.resolve(__dirname, '../common')
 		}
 	}

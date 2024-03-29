@@ -1,4 +1,3 @@
-import * as React from "react";
 const SvgAscend = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={props.size} height={props.size} {...props}>
     <g color="#000">

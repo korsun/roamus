@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from './useStore'
 import { fetchRoute } from '@/api'
-import { /* MAPTILER_API_KEY, */ THUNDERFOREST_API_KEY, getCurrentPosition, getRetinaMod, sortMarkersById, startMarkerStyle, endMarkerStyle, interimMarkerStyle } from '@/helpers'
+import { getCurrentPosition, getRetinaMod, sortMarkersById, startMarkerStyle, endMarkerStyle, interimMarkerStyle } from '@/helpers'
 
 import Map from 'ol/Map'
 // import OSM from 'ol/source/OSM.js'
@@ -83,14 +83,14 @@ export const useMap = () => {
 				// new TileLayer({
 				// 	source: new XYZ({
 				// 		attributions: '&copy; MapTiler',
-				// 		url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${MAPTILER_API_KEY}`,
+				// 		url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${process.env.MAPTILER_API_KEY}`,
 				// 		tilePixelRatio: isRetina ? 2 : 1,
 				// 	}),
 				// }),
 				new TileLayer({
 					source: new XYZ({
 						attributions: '&copy; OpenCycleMap',
-						url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${THUNDERFOREST_API_KEY}`,
+						url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${process.env.THUNDERFOREST_API_KEY}`,
 						tilePixelRatio: isRetina ? 2 : 1,
 					}),
 				}),
