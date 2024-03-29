@@ -1,3 +1,4 @@
 **/*.js
 client/src/assets/**/*
 **/*.d.ts
+.github/**/*

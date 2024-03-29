@@ -12,7 +12,7 @@
     "build:client": "webpack --mode development --config client/webpack.client.js",
     "start:client": "webpack serve --mode development --config client/webpack.client.js",
     "build:svg": "svgr -d . . --filename-case kebab --ext 'svgr.tsx'",
-    "lint": "eslint --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
     "test": "jest --config='./testing/jest.config.js'",
     "prettier": "prettier --write .",
     "prepare": "husky",

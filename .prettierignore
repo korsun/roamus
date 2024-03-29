@@ -7,3 +7,4 @@ testing/
 yarn.lock
 README.md
 .gitignore
+.github/
