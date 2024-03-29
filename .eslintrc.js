@@ -1,10 +1,17 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+  plugins: ['@typescript-eslint', 'import'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+  ],
   rules: {
-    'jsx-quotes': ['error', 'prefer-single'],
+    'jsx-quotes': ['warn', 'prefer-single'],
     'no-duplicate-imports': 'error',
     'no-use-before-define': 'error',
     'default-case': 'error',
@@ -36,5 +43,48 @@ module.exports = {
     'no-empty': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     'no-use-before-define': 'off',
+    'import/order': [
+      'warn',
+      {
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+          },
+        ],
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
+        'newlines-between': 'always',
+      },
+    ],
+    'sort-imports': [
+      'warn',
+      {
+        ignoreDeclarationSort: true,
+      },
+    ],
+    'import/newline-after-import': [
+      'warn',
+      {
+        count: 1,
+      },
+    ],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/no-array-index-key': 'error',
+    'react/self-closing-comp': [
+      'warn',
+      {
+        component: true,
+        html: true,
+      },
+    ],
+    'no-return-await': 'error',
   },
 };
