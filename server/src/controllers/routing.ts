@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import fetch from 'cross-fetch';
 import asyncHandler from 'express-async-handler';
-
 import {
   GraphHopperPayload,
   GraphHopperResponse,
@@ -44,7 +43,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           },
         },
       )
-        .then(raw => raw.json())
+        .then((raw) => raw.json())
         .then((data: GraphHopperResponse) => data?.paths?.[0]);
 
       break;
@@ -73,7 +72,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           },
         },
       )
-        .then(raw => raw.json())
+        .then((raw) => raw.json())
         .then((data: ORSResponse) => {
           const feature = data?.features?.[0];
 

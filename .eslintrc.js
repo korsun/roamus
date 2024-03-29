@@ -87,4 +87,9 @@ module.exports = {
     ],
     'no-return-await': 'error',
   },
+	settings: {
+		react: {
+			version: 'detect',
+		}
+	}
 };

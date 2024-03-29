@@ -2,15 +2,14 @@ import { useState } from 'react';
 import cx from 'classnames';
 
 import { useStore } from '@/hooks';
-import { metresToKm, msToTime, ascDescToFixed } from '@/helpers';
-
+import { ascDescToFixed, metresToKm, msToTime } from '@/helpers';
 import {
-  DistanceSvgr,
-  TimeSvgr,
   AscendSvgr,
   DescendSvgr,
+  DistanceSvgr,
+  TimeSvgr,
 } from '@/assets/icons/index.svgr';
-import { RouteInfo, Error, EngineSelect } from '@/components';
+import { EngineSelect, Error, RouteInfo } from '@/components';
 
 import s from './SidePanel.module.css';
 
@@ -48,22 +47,22 @@ export const SidePanel = () => {
         </section>
         <section className={cx(s.section, s.icons)}>
           <RouteInfo
-            title="Distance"
+            title='Distance'
             text={metresToKm(distance)}
             icon={<DistanceSvgr size={32} />}
           />
           <RouteInfo
-            title="Time"
+            title='Time'
             text={msToTime(time)}
             icon={<TimeSvgr size={32} />}
           />
           <RouteInfo
-            title="Ascend"
+            title='Ascend'
             text={ascDescToFixed(ascend)}
             icon={<AscendSvgr size={32} />}
           />
           <RouteInfo
-            title="Descend"
+            title='Descend'
             text={ascDescToFixed(descend)}
             icon={<DescendSvgr size={32} />}
           />

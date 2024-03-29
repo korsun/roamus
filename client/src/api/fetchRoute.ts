@@ -1,9 +1,9 @@
-import { apiService } from '@/services';
-
 import { ProxyServerPayload } from '@common/types';
 
+import { apiService } from '@/services';
+
 export const fetchRoute = async (payload: ProxyServerPayload) => {
-  return await apiService.post({
+  return apiService.post({
     url: 'http://localhost:4000/api/routing',
     payload,
   });

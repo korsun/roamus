@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-
-import { Path, Engine } from '@common/types';
+import { Engine, Path } from '@common/types';
 
 export type Store = {
   distance: number;
@@ -22,7 +21,7 @@ export type Store = {
 };
 
 export const useStore = create<Store>()(
-  subscribeWithSelector(set => ({
+  subscribeWithSelector((set) => ({
     distance: 0,
     time: 0,
     ascend: 0,
@@ -41,7 +40,7 @@ export const useStore = create<Store>()(
         descend,
         error: undefined,
       })),
-    setError: error =>
+    setError: (error) =>
       set(({ limits }) => ({
         error,
         engine: 'openrouteservice',
@@ -50,7 +49,7 @@ export const useStore = create<Store>()(
           graphhopper: true,
         },
       })),
-    setEngine: engine =>
+    setEngine: (engine) =>
       set(() => ({
         engine,
         error: undefined,

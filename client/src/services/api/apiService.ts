@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
-import { GraphHopperLimitError } from './apiErrors';
 import { Path } from '@common/types';
+
+import { GraphHopperLimitError } from './apiErrors';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 

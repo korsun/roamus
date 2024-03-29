@@ -14,8 +14,8 @@ export const EngineSelect = ({
     <span className={s.selectCaption}>Routing service:</span>
     <div>
       <input
-        type="checkbox"
-        id="openrouteservice"
+        type='checkbox'
+        id='openrouteservice'
         disabled={limits.openrouteservice}
         onChange={() => setEngine('openrouteservice')}
         checked={engine === 'openrouteservice'}
@@ -24,8 +24,8 @@ export const EngineSelect = ({
     </div>
     <div>
       <input
-        type="checkbox"
-        id="graphhopper"
+        type='checkbox'
+        id='graphhopper'
         disabled={limits.graphhopper}
         onChange={() => setEngine('graphhopper')}
         checked={engine === 'graphhopper'}

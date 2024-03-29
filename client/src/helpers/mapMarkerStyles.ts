@@ -1,4 +1,5 @@
 import { Icon, Style } from 'ol/style';
+
 import Marker from '@/assets/icons/map-marker.svg';
 
 export const startMarkerStyle = new Style({
