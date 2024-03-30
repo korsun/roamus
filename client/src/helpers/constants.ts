@@ -4,3 +4,4 @@ export const ROUTE_LINE_STYLES = {
   'stroke-color': 'red',
   'stroke-width': 5,
 };
+export const DEFAULT_POSITION_COORDS = [16, 45];

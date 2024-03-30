@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { metresToKm, msToTime } from './route';
 
 describe('metresToKm', () => {
