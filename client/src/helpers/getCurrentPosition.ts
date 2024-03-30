@@ -1,3 +1,5 @@
+import { DEFAULT_POSITION_COORDS } from './constants';
+
 const getGeolocationPromisified = function (options?: PositionOptions) {
   return new Promise(function (
     resolve: PositionCallback,
@@ -8,7 +10,7 @@ const getGeolocationPromisified = function (options?: PositionOptions) {
 };
 
 export const getCurrentPosition = async () => {
-  let currentPosition = [16.424632, 45.750721];
+  let currentPosition = DEFAULT_POSITION_COORDS;
 
   try {
     const { coords } = await getGeolocationPromisified();

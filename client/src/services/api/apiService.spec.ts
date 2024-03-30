@@ -1,21 +1,25 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { apiService } from './apiService';
 
-describe('apiService', () => {
-  fetchMock.mockResponse(JSON.stringify({ test: 'test' }));
+describe.skip('apiService', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
 
-  xit('Adds necessary headers for a POST call', async () => {
+  it('Adds necessary headers for a POST call', async () => {
     await apiService.post({
-      url: 'https://graphhopper-api-test.com',
+      url: 'some-url',
       payload: {},
     });
-    expect(fetchMock).toBeCalledWith(`https://graphhopper-api-test.com/?`, {
+    expect(fetch).toHaveBeenCalledWith(`https://graphhopper-api-test.com/?`, {
       body: '{}',
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     });
   });
 
-  xit('Merges necessary headers and queryParams with custom ones', async () => {
+  it('Merges necessary headers and queryParams with custom ones', async () => {
     await apiService.post({
       url: 'https://graphhopper-api-test.com',
       payload: {},
@@ -26,7 +30,7 @@ describe('apiService', () => {
         key: 'custom-api-key',
       },
     });
-    expect(fetchMock).toBeCalledWith(
+    expect(fetch).toHaveBeenCalledWith(
       `https://graphhopper-api-test.com/?key=custom-api-key`,
       {
         body: '{}',
@@ -36,7 +40,7 @@ describe('apiService', () => {
     );
   });
 
-  xit('Returns a parsed JSON', async () => {
+  it('Returns a parsed JSON', async () => {
     const res = await apiService.post({
       url: 'https://graphhopper-api-test.com',
       payload: {},
@@ -44,9 +48,9 @@ describe('apiService', () => {
     expect(res).toEqual({ test: 'test' });
   });
 
-  xit('Handles errors', async () => {
+  it('Handles errors', async () => {
     const err = new Error('Too bad');
-    fetchMock.mockRejectOnce(err);
+    fetch.mockImplementationOnce(() => Promise.reject(err));
 
     await expect(
       apiService.post({
@@ -56,9 +60,9 @@ describe('apiService', () => {
     ).rejects.toThrow('Too bad');
   });
 
-  xit('If response is not ok but there is no error from server, throws an error', async () => {
-    //
-  });
+  it.todo(
+    'If response is not ok but there is no error from server, throws an error',
+  );
 
   it.todo('GET');
 });

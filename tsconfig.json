@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+		"types": [
+			"vitest/globals"
+		],
     "target": "es5",
     "lib": ["es6", "es7", "es2017", "dom"],
     "module": "esnext",
@@ -19,5 +22,8 @@
       "@/*": ["client/src/*", "server/src/*"],
       "@common/*": ["common/*"]
     }
-  }
+  },
+	"exclude": [
+		"**/*.spec.ts"
+	]
 }

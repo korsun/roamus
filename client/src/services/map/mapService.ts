@@ -51,10 +51,16 @@ export class MapService extends EventEmitter {
     const isRetina = Boolean(getRetinaMod());
     const center = await getCurrentPosition();
     const markersLayer = new VectorLayer({
+      properties: {
+        name: 'markersLayer',
+      },
       source: this.markersSource,
       style: startMarkerStyle,
     });
     const routeLayer = new VectorLayer({
+      properties: {
+        name: 'routeLayer',
+      },
       source: this.routeSource,
       style: ROUTE_LINE_STYLES,
     });
@@ -122,7 +128,7 @@ export class MapService extends EventEmitter {
       }),
     });
 
-    this.renderMarkers();
+    this.setMarkersRendering();
     modify.on('modifyend', this.calculateRoute);
     this.map = map;
 
@@ -134,7 +140,15 @@ export class MapService extends EventEmitter {
     this.markersSource.clear();
   }
 
-  private renderMarkers() {
+  public getMarkersSource() {
+    return this.markersSource;
+  }
+
+  public getRouteSource() {
+    return this.routeSource;
+  }
+
+  private setMarkersRendering() {
     this.markersSource.on('addfeature', (e) => {
       const markers = this.markersSource.getFeatures();
 
