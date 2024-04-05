@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Coordinate } from 'ol/coordinate';
+import { Engine } from '@common/types';
 
-import { MapService } from '@/services';
+import { GraphHopperLimitError, MapService } from '@/services';
 import { fetchRoute } from '@/api';
-import { GraphHopperLimitError } from '@/services/api';
 
 import { useStore } from './useStore';
 
 export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
   const mapRef = useRef(null);
-  const { setRoute, setError, engine } = useStore();
+  const { setPath, setError, routes } = useStore();
   const [isMapRendered, setIsMapRendered] = useState(false);
-  const { cleanMap, renderRoute, initMap, onEvent } = useMemo(
+  const { cleanMap, cleanRoute, renderRoute, initMap, onEvent } = useMemo(
     () => new MapService(),
     [],
   );
@@ -28,9 +28,10 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
     })();
 
     return useStore.subscribe(
-      (state) => state.distance,
+      (state) =>
+        Object.values(state.routes).some((route) => route.path?.distance),
       (distance) => {
-        if (distance === 0) {
+        if (!distance) {
           cleanMap();
         }
       },
@@ -38,27 +39,46 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
   }, [cleanMap, initMap, styles]);
 
   useEffect(() => {
-    const offEvent = onEvent(
-      'coordinatesChange',
-      async (coordinates: Coordinate[]) => {
-        if (!coordinates.length) {
-          return;
-        }
+    const applyRoute = async (coordinates: Coordinate[]) => {
+      if (!coordinates.length) {
+        return;
+      }
 
-        const data = await fetchRoute({ engine, coordinates });
-        setRoute(data);
-        try {
-          renderRoute(data);
-        } catch (err) {
+      Promise.all(
+        (Object.keys(routes) as Engine[]).map(async (engine) => {
+          if (routes[engine].isActive) {
+            return {
+              engine,
+              data: await fetchRoute({
+                engine,
+                coordinates,
+              }),
+            };
+          }
+
+          cleanRoute(engine);
+          return null;
+        }),
+      )
+        .then(([...results]) =>
+          results.forEach((result) => {
+            if (!result) {
+              return;
+            }
+            setPath(result.engine, result.data);
+            renderRoute(result);
+          }),
+        )
+        .catch((err) => {
           if (err instanceof GraphHopperLimitError) {
             setError(err.message);
           }
-        }
-      },
-    );
+        });
+    };
+    const offEvent = onEvent('coordinatesChange', applyRoute);
 
     return () => offEvent();
-  }, [engine, onEvent, renderRoute, setRoute, setError]);
+  }, [routes, onEvent, renderRoute, setPath, setError, cleanRoute]);
 
   return {
     mapRef,

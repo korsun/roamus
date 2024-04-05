@@ -2,57 +2,67 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { Engine, Path } from '@common/types';
 
-export type Store = {
-  distance: number;
-  time: number;
-  ascend: number;
-  descend: number;
+export type Route = {
+  path?: Path;
+  hasLimits: boolean;
+  isActive: boolean;
   error?: string;
-  engine: Engine;
-  limits: {
-    openrouteservice: boolean;
-    graphhopper: boolean;
-  };
-  setRoute: (
-    path: Pick<Path, 'distance' | 'time' | 'ascend' | 'descend'>,
-  ) => void;
+};
+
+export type Store = {
+  routes: Record<Engine, Route>;
+  setPath: (engine: Engine, path: Path | undefined) => void;
   setError: (err: string) => void;
-  setEngine: (engine: Engine) => void;
+  setActiveEngines: (engine: Engine) => void;
 };
 
 export const useStore = create<Store>()(
   subscribeWithSelector((set) => ({
-    distance: 0,
-    time: 0,
-    ascend: 0,
-    descend: 0,
-    error: undefined,
-    engine: 'openrouteservice',
-    limits: {
-      openrouteservice: false,
-      graphhopper: false,
+    routes: {
+      openrouteservice: {
+        hasLimits: false,
+        isActive: true,
+      },
+      graphhopper: {
+        hasLimits: false,
+        isActive: true,
+      },
     },
-    setRoute: ({ distance, time, ascend, descend }) =>
-      set(() => ({
-        distance,
-        time,
-        ascend,
-        descend,
-        error: undefined,
-      })),
-    setError: (error) =>
-      set(({ limits }) => ({
-        error,
-        engine: 'openrouteservice',
-        limits: {
-          ...limits,
-          graphhopper: true,
+    setPath: (engine, path) =>
+      set(({ routes }) => ({
+        routes: {
+          ...routes,
+          [engine]: {
+            ...routes[engine],
+            path,
+          },
         },
       })),
-    setEngine: (engine) =>
-      set(() => ({
-        engine,
-        error: undefined,
+    setError: (error) =>
+      set(({ routes }) => ({
+        routes: {
+          ...routes,
+          openrouteservice: {
+            ...routes.openrouteservice,
+            isActive: true,
+          },
+          graphhopper: {
+            ...routes.graphhopper,
+            isActive: false,
+            hasLimits: true,
+            error,
+          },
+        },
+      })),
+    setActiveEngines: (engine) =>
+      set(({ routes }) => ({
+        routes: {
+          ...routes,
+          [engine]: {
+            ...routes[engine],
+            isActive: !routes[engine].isActive,
+          },
+        },
       })),
   })),
 );

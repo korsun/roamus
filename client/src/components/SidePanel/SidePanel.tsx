@@ -1,31 +1,15 @@
 import { useState } from 'react';
 import cx from 'classnames';
+import { Engine } from '@common/types';
 
 import { useStore } from '@/hooks';
-import { ascDescToFixed, metresToKm, msToTime } from '@/helpers';
-import {
-  AscendSvgr,
-  DescendSvgr,
-  DistanceSvgr,
-  TimeSvgr,
-} from '@/assets/icons/index.svgr';
-import { EngineSelect, Error, RouteInfo } from '@/components';
+import { Error, Route } from '@/components';
 
 import s from './SidePanel.module.css';
 
 export const SidePanel = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const {
-    distance,
-    time,
-    ascend,
-    descend,
-    error,
-    engine,
-    limits,
-    setEngine,
-    setRoute,
-  } = useStore();
+  const { routes, setActiveEngines, setPath } = useStore();
 
   const handleClick = () => {
     setIsCollapsed(!isCollapsed);
@@ -42,46 +26,34 @@ export const SidePanel = () => {
           [s.collapsedPanel]: isCollapsed,
         })}
       >
-        <section className={s.section}>
-          <EngineSelect engine={engine} setEngine={setEngine} limits={limits} />
-        </section>
-        <section className={cx(s.section, s.icons)}>
-          <RouteInfo
-            title='Distance'
-            text={metresToKm(distance)}
-            icon={<DistanceSvgr size={32} />}
-          />
-          <RouteInfo
-            title='Time'
-            text={msToTime(time)}
-            icon={<TimeSvgr size={32} />}
-          />
-          <RouteInfo
-            title='Ascend'
-            text={ascDescToFixed(ascend)}
-            icon={<AscendSvgr size={32} />}
-          />
-          <RouteInfo
-            title='Descend'
-            text={ascDescToFixed(descend)}
-            icon={<DescendSvgr size={32} />}
-          />
-        </section>
+        <p>Click on the map to set some markers</p>
 
-        {Boolean(distance) && (
+        {Object.entries(routes).map(([name, engine]) => (
+          <Route
+            key={name}
+            name={name as Engine}
+            engine={engine}
+            setActiveEngines={setActiveEngines}
+          />
+        ))}
+
+        {Object.values(routes).some((route) => route.path) && (
           <section className={s.section}>
             <button
-              onClick={() =>
-                setRoute({ distance: 0, time: 0, ascend: 0, descend: 0 })
-              }
+              onClick={() => {
+                for (const name in routes) {
+                  setPath(name as Engine, undefined);
+                }
+              }}
             >
               Clear route
             </button>
           </section>
         )}
 
-        <Error message={error} />
+        <Error message={routes.graphhopper.error} />
       </div>
+
       <button className={s.collapseButton} onClick={handleClick}>
         {isCollapsed ? '>' : '<'}
       </button>
