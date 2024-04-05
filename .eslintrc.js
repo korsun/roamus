@@ -11,7 +11,6 @@ module.exports = {
     'plugin:react/jsx-runtime',
   ],
   rules: {
-    'jsx-quotes': ['warn', 'prefer-single'],
     'no-duplicate-imports': 'error',
     'no-use-before-define': 'error',
     'default-case': 'error',
@@ -87,9 +86,9 @@ module.exports = {
     ],
     'no-return-await': 'error',
   },
-	settings: {
-		react: {
-			version: 'detect',
-		}
-	}
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 };
