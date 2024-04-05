@@ -40,7 +40,9 @@ describe('MapService', () => {
       expect(mapService.map).toBeUndefined();
       expect(mapService.route).toBeUndefined();
       expect(mapService['markersSource']).toBeInstanceOf(VectorSource);
-      expect(mapService['routeSource']).toBeInstanceOf(VectorSource);
+      expect(mapService['routeSources']['graphhopper']).toBeInstanceOf(
+        VectorSource,
+      );
     });
   });
 
@@ -119,7 +121,10 @@ describe('MapService', () => {
           },
         ],
       };
-      mapService.renderRoute({ points: mockData });
+      mapService.renderRoute({
+        engine: 'graphhopper',
+        data: { points: mockData },
+      });
 
       expect(mockClear).toHaveBeenCalledTimes(1);
     });
