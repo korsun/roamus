@@ -158,6 +158,10 @@ export class MapService extends EventEmitter {
     this.markersSource.clear();
   };
 
+  public cleanRoute = (engine: Engine) => {
+    this.routeSources[engine].clear();
+  };
+
   public getMarkersSource() {
     return this.markersSource;
   }

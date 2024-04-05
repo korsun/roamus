@@ -11,7 +11,7 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
   const mapRef = useRef(null);
   const { setPath, setError, routes } = useStore();
   const [isMapRendered, setIsMapRendered] = useState(false);
-  const { cleanMap, renderRoute, initMap, onEvent } = useMemo(
+  const { cleanMap, cleanRoute, renderRoute, initMap, onEvent } = useMemo(
     () => new MapService(),
     [],
   );
@@ -55,6 +55,8 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
               }),
             };
           }
+
+          cleanRoute(engine);
           return null;
         }),
       )
@@ -76,7 +78,7 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
     const offEvent = onEvent('coordinatesChange', applyRoute);
 
     return () => offEvent();
-  }, [routes, onEvent, renderRoute, setPath, setError]);
+  }, [routes, onEvent, renderRoute, setPath, setError, cleanRoute]);
 
   return {
     mapRef,
