@@ -13,11 +13,10 @@ import {
 import GeoJSON from 'ol/format/GeoJSON';
 import { Attribution, ScaleLine, Zoom } from 'ol/control';
 import { Point } from 'ol/geom';
-import { Path } from '@common/types';
+import { Engine, Path } from '@common/types';
 
 import {
   EventEmitter,
-  ROUTE_LINE_STYLES,
   endMarkerStyle,
   getCurrentPosition,
   getRetinaMod,
@@ -34,13 +33,16 @@ type InitMapParams = {
 export class MapService extends EventEmitter {
   public map: Map | undefined;
   private markersSource: VectorSource;
-  private routeSource: VectorSource;
+  private routeSources: Record<Engine, VectorSource>;
   public route: Path | undefined;
 
   constructor() {
     super();
     this.markersSource = new VectorSource();
-    this.routeSource = new VectorSource();
+    this.routeSources = {
+      openrouteservice: new VectorSource(),
+      graphhopper: new VectorSource(),
+    };
     this.map = undefined;
     this.route = undefined;
   }
@@ -57,12 +59,25 @@ export class MapService extends EventEmitter {
       source: this.markersSource,
       style: startMarkerStyle,
     });
-    const routeLayer = new VectorLayer({
+    const openrouteserviceLayer = new VectorLayer({
       properties: {
-        name: 'routeLayer',
+        name: 'openrouteserviceLayer',
       },
-      source: this.routeSource,
-      style: ROUTE_LINE_STYLES,
+      source: this.routeSources['openrouteservice'],
+      style: {
+        'stroke-color': 'rgba(255, 0, 0, 0.5)',
+        'stroke-width': 5,
+      },
+    });
+    const graphhopperLayer = new VectorLayer({
+      properties: {
+        name: 'graphhopperLayer',
+      },
+      source: this.routeSources['graphhopper'],
+      style: {
+        'stroke-color': 'rgba(0, 0, 255, 0.5)',
+        'stroke-width': 5,
+      },
     });
     const draw = new Draw({
       source: this.markersSource,
@@ -108,7 +123,8 @@ export class MapService extends EventEmitter {
             tilePixelRatio: isRetina ? 2 : 1,
           }),
         }),
-        routeLayer,
+        openrouteserviceLayer,
+        graphhopperLayer,
         markersLayer,
       ],
       interactions: defaultInteractions().extend([draw, modify, snap]),
@@ -135,17 +151,19 @@ export class MapService extends EventEmitter {
     return map;
   };
 
-  public cleanMap() {
-    this.routeSource.clear();
+  public cleanMap = () => {
+    for (const name in this.routeSources) {
+      this.routeSources[name].clear();
+    }
     this.markersSource.clear();
-  }
+  };
 
   public getMarkersSource() {
     return this.markersSource;
   }
 
-  public getRouteSource() {
-    return this.routeSource;
+  public getRouteSource(engine: Engine) {
+    return this.routeSources[engine];
   }
 
   private setMarkersRendering() {
@@ -185,8 +203,10 @@ export class MapService extends EventEmitter {
     }
   };
 
-  public renderRoute = (data: Path) => {
-    this.routeSource.clear();
-    this.routeSource.addFeatures(new GeoJSON().readFeatures(data.points));
+  public renderRoute = ({ engine, data }: { engine: Engine; data: Path }) => {
+    this.routeSources[engine].clear();
+    this.routeSources[engine].addFeatures(
+      new GeoJSON().readFeatures(data.points),
+    );
   };
 }

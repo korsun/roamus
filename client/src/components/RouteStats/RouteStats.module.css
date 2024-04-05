@@ -1,0 +1,13 @@
+.section {
+	padding: 12px 0;
+	border-bottom: 1px solid lightgray;
+}
+
+.section:first-of-type {
+	padding-top: 0;
+}
+
+.icons {
+	display: flex;
+	justify-content: space-between;
+}
