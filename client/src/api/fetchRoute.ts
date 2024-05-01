@@ -4,7 +4,7 @@ import { apiService } from '@/services';
 
 export const fetchRoute = async (payload: ProxyServerPayload) => {
   return apiService.post({
-    url: 'http://localhost:4000/api/routing',
+    url: `${process.env.API_BASE_URL}/api/routing`,
     payload,
   });
 };
