@@ -42,6 +42,7 @@ This project uses Vite for both frontend and backend development.
    ```bash
    pnpm build
    ```
+	 
 
 2. Start the production server:
    ```bash
