@@ -9,10 +9,9 @@ export default defineConfig({
     ssr: true,
     outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: true,
     rollupOptions: {
       input: {
-        server: resolve(__dirname, 'src/server.ts'),
+        server: resolve(__dirname, 'src/index.ts'),
       },
       output: {
         entryFileNames: 'server.js',
