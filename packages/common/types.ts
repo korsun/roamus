@@ -80,8 +80,10 @@ export type ORSResponse = {
       segments: Info[];
       summary: Info;
       way_points: number[];
+      ascent?: number;
+      descent?: number;
     };
-  };
+  }[];
   metadata: unknown;
 };
 

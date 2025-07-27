@@ -1,4 +1,4 @@
-const SvgAscend = props => (
+const SvgDescend = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={props.size}
@@ -8,25 +8,25 @@ const SvgAscend = props => (
     <g color="#000">
       <path
         fill="#cad1d8"
-        d="m-565 1374.362-10 13h5v15h10v-15h5l-10-13z"
+        d="m-525 1402.362-10-13h5v-15h10v15h5l-10 13z"
         overflow="visible"
         style={{
           isolation: 'auto',
           mixBlendMode: 'normal',
         }}
-        transform="translate(581 -1372.362)"
+        transform="translate(541 -1372.362)"
       />
       <path
-        fill="#f05542"
-        d="m-571.25 1382.487-1.25 1.625-2.5 3.25h5v15h10v-15h5l-2.5-3.25-1.25-1.625z"
+        fill="#25b39e"
+        d="m-525 1402.362-10-13h5v-7h10v7h5z"
         overflow="visible"
         style={{
           isolation: 'auto',
           mixBlendMode: 'normal',
         }}
-        transform="translate(581 -1372.362)"
+        transform="translate(541 -1372.362)"
       />
     </g>
   </svg>
 );
-export default SvgAscend;
+export default SvgDescend;

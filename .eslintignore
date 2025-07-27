@@ -1,4 +1,4 @@
 **/*.js
-client/src/assets/**/*
+apps/client/src/assets/**/*
 **/*.d.ts
 .github/**/*

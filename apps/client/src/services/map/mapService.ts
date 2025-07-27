@@ -112,14 +112,14 @@ export class MapService extends EventEmitter {
         // new TileLayer({
         // 	source: new XYZ({
         // 		attributions: '&copy; MapTiler',
-        // 		url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${process.env.MAPTILER_API_KEY}`,
+        // 		url: `https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}${getRetinaMod()}.png?key=${import.meta.env.VITE_MAPTILER_API_KEY}`,
         // 		tilePixelRatio: isRetina ? 2 : 1,
         // 	}),
         // }),
         new TileLayer({
           source: new XYZ({
             attributions: '&copy; OpenCycleMap',
-            url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${process.env.THUNDERFOREST_API_KEY}`,
+            url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}${getRetinaMod()}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`,
             tilePixelRatio: isRetina ? 2 : 1,
           }),
         }),

@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-export const errorHandler = (error: Error, _, res: Response) => {
+export const errorHandler = (error: Error, _: Request, res: Response) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
   res.status(statusCode);

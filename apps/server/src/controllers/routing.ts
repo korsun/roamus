@@ -28,13 +28,13 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         optimize: 'false',
       };
 
-      if (!process.env.GRAPHHOPER_API_KEY) {
+      if (!import.meta.env.VITE_GRAPHHOPER_API_KEY) {
         res.status(400);
         throw new Error('Missing GraphHopper API key');
       }
 
       result = fetch(
-        `https://graphhopper.com/api/1/route/?key=${process.env.GRAPHHOPER_API_KEY}`,
+        `https://graphhopper.com/api/1/route/?key=${import.meta.env.VITE_GRAPHHOPER_API_KEY}`,
         {
           method: 'post',
           body: JSON.stringify(payload),
@@ -56,7 +56,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         instructions: false,
       };
 
-      if (!process.env.OPENROUTESERVICE_API_KEY) {
+      if (!import.meta.env.VITE_OPENROUTESERVICE_API_KEY) {
         res.status(400);
         throw new Error('Missing OpenRouteService API key');
       }
@@ -68,7 +68,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           body: JSON.stringify(payload),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: process.env.OPENROUTESERVICE_API_KEY,
+            Authorization: import.meta.env.VITE_OPENROUTESERVICE_API_KEY,
           },
         },
       )
