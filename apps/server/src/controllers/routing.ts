@@ -3,11 +3,18 @@ import fetch from 'cross-fetch';
 import asyncHandler from 'express-async-handler';
 import {
   GraphHopperPayload,
+  GraphHopperResponse,
   ORSPayload,
   ORSResponse,
-  isGraphHopperResponse,
-  isORSResponse,
 } from '@common/types';
+
+const isGraphHopperResponse = (data: unknown): data is GraphHopperResponse => {
+  return typeof data === 'object' && data !== null && 'paths' in data;
+};
+
+const isORSResponse = (data: unknown): data is ORSResponse => {
+  return typeof data === 'object' && data !== null && 'features' in data;
+};
 
 /**
  * @desc Map routing between given points
