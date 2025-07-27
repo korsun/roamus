@@ -20,10 +20,15 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Enable preflight for all routes
 app.use(express.json());
 
-app.use('/api', routing);
+// Mount the router at the root path since Vercel is already handling the /api prefix
+app.use('/', routing);
 
 app.get('/', (_, res) => {
   res.send('API is running....');
+});
+
+app.get('/api/test', (_, res) => {
+  res.json({ message: 'Test endpoint works!' });
 });
 
 app.use(errorHandler);
