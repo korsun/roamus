@@ -1,4 +1,4 @@
-import { Map, SidePanel } from '@/components';
+import { Map, SidePanel } from '@/domains';
 
 import './App.module.css';
 

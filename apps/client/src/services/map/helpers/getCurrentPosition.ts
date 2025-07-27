@@ -1,4 +1,4 @@
-import { DEFAULT_POSITION_COORDS } from './constants';
+export const DEFAULT_POSITION_COORDS = [16, 45];
 
 const getGeolocationPromisified = function (options?: PositionOptions) {
   return new Promise(function (

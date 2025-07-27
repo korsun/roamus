@@ -8,6 +8,14 @@ import {
   ORSResponse,
 } from '@common/types';
 
+const isGraphHopperResponse = (data: unknown): data is GraphHopperResponse => {
+  return typeof data === 'object' && data !== null && 'paths' in data;
+};
+
+const isORSResponse = (data: unknown): data is ORSResponse => {
+  return typeof data === 'object' && data !== null && 'features' in data;
+};
+
 /**
  * @desc Map routing between given points
  * @route POST /api/routing/
@@ -15,6 +23,7 @@ import {
 export const buildRoute = asyncHandler((req: Request, res: Response) => {
   let payload: GraphHopperPayload | ORSPayload;
   const { engine, coordinates } = req.body;
+
   let result;
 
   switch (engine) {
@@ -44,7 +53,11 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         },
       )
         .then((raw) => raw.json())
-        .then((data: GraphHopperResponse) => data?.paths?.[0]);
+        .then((data: unknown) => {
+          if (isGraphHopperResponse(data)) {
+            return data?.paths?.[0];
+          }
+        });
 
       break;
 
@@ -89,8 +102,12 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
   }
 
   result
-    .then((data: ORSResponse | GraphHopperResponse) => {
-      res.status(200).json(data);
+    .then((data: unknown) => {
+      if (isORSResponse(data) || isGraphHopperResponse(data)) {
+        res.status(200).json(data);
+      } else {
+        throw new Error('Invalid response');
+      }
     })
     .catch((err: Error) => {
       res.status(400);

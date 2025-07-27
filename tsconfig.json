@@ -17,9 +17,6 @@
       "@common/types": ["packages/common/types.ts"]
     }
   },
-	"include": [
-		"global.d.ts"
-	],
   "exclude": [
     "**/*.spec.ts",
     "node_modules"

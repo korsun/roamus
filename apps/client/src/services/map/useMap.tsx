@@ -2,10 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Coordinate } from 'ol/coordinate';
 import { Engine } from '@common/types';
 
-import { GraphHopperLimitError, MapService } from '@/services';
-import { fetchRoute } from '@/api';
-
-import { useStore } from './useStore';
+import { GraphHopperLimitError, MapService, useStore } from '@/services';
+import { fetchRoute } from '@/services/api/apiRoutes';
 
 export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
   const mapRef = useRef(null);

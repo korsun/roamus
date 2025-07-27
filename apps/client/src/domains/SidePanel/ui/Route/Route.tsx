@@ -1,6 +1,6 @@
 import { Engine } from '@common/types';
 
-import { Route as TRoute } from '@/hooks/useStore';
+import type { Route as TRoute } from '@/services';
 
 import { RouteStats } from '../RouteStats';
 

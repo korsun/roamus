@@ -1,4 +1,4 @@
-import { useMap } from '@/hooks';
+import { useMap } from '@/services';
 
 import s from './Map.module.css';
 
