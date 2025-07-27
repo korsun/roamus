@@ -4,7 +4,7 @@ client/public/
 server/dist/
 testing/
 .husky
-yarn.lock
+pnpm-lock.yaml
 README.md
 .gitignore
 .github/

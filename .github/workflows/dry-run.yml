@@ -21,10 +21,10 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
+        cache: 'pnpm'
 
     - name: Install deps
-      run: yarn --frozen-lockfile
+      run: pnpm install --frozen-lockfile
       env:
         GRAPHHOPER_API_KEY: ${{ secrets.GRAPHHOPER_API_KEY }}
         OPENROUTESERVICE_API_KEY: ${{ secrets.OPENROUTESERVICE_API_KEY }}
@@ -34,13 +34,13 @@ jobs:
         API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
     - name: Lint
-      run: yarn lint
+      run: pnpm lint
 
     - name: Build server
-      run: yarn build:server
+      run: pnpm build:server
 
     - name: Build client
-      run: yarn build:client
+      run: pnpm build:client
 
     - name: Test
-      run: yarn test
+      run: pnpm test

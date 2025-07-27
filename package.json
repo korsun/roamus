@@ -6,6 +6,10 @@
   "author": "Kirill Korsun <korsun.me@gmail.com>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "scripts": {
     "build:server": "webpack --mode development --config server/webpack.server.js",
     "start:server": "node server/dist/server.js",
@@ -66,7 +70,7 @@
       "prettier --write"
     ],
     "./**/*.{ts,tsx} !(*.d.ts) !(*.spec.ts)": [
-      "yarn lint"
+      "pnpm lint"
     ]
   }
 }

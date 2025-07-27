@@ -1,8 +1,8 @@
 Just a sandbox app to play around maps and routing. To be updated...
 
 ```
-yarn build:server
-yarn start:server
+pnpm build:server
+pnpm start:server
 
-yarn start:client
+pnpm start:client
 ```
