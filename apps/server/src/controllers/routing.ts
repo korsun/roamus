@@ -3,9 +3,10 @@ import fetch from 'cross-fetch';
 import asyncHandler from 'express-async-handler';
 import {
   GraphHopperPayload,
-  GraphHopperResponse,
   ORSPayload,
   ORSResponse,
+  isGraphHopperResponse,
+  isORSResponse,
 } from '@common/types';
 
 /**
@@ -15,6 +16,7 @@ import {
 export const buildRoute = asyncHandler((req: Request, res: Response) => {
   let payload: GraphHopperPayload | ORSPayload;
   const { engine, coordinates } = req.body;
+
   let result;
 
   switch (engine) {
@@ -44,7 +46,11 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         },
       )
         .then((raw) => raw.json())
-        .then((data: GraphHopperResponse) => data?.paths?.[0]);
+        .then((data: unknown) => {
+          if (isGraphHopperResponse(data)) {
+            return data?.paths?.[0];
+          }
+        });
 
       break;
 
@@ -89,8 +95,12 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
   }
 
   result
-    .then((data: ORSResponse | GraphHopperResponse) => {
-      res.status(200).json(data);
+    .then((data: unknown) => {
+      if (isORSResponse(data) || isGraphHopperResponse(data)) {
+        res.status(200).json(data);
+      } else {
+        throw new Error('Invalid response');
+      }
     })
     .catch((err: Error) => {
       res.status(400);

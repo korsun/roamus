@@ -15,15 +15,15 @@ import { Attribution, ScaleLine, Zoom } from 'ol/control';
 import { Point } from 'ol/geom';
 import { Engine, Path } from '@common/types';
 
+import { EventEmitter, getRetinaMod } from '@/shared';
+
 import {
-  EventEmitter,
   endMarkerStyle,
   getCurrentPosition,
-  getRetinaMod,
   interimMarkerStyle,
   sortMarkersById,
   startMarkerStyle,
-} from '@/helpers';
+} from './helpers';
 
 type InitMapParams = {
   container: HTMLDivElement | undefined;
@@ -153,7 +153,7 @@ export class MapService extends EventEmitter {
 
   public cleanMap = () => {
     for (const name in this.routeSources) {
-      this.routeSources[name].clear();
+      this.routeSources[name as Engine].clear();
     }
     this.markersSource.clear();
   };

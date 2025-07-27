@@ -1,13 +1,14 @@
 import cx from 'classnames';
 
-import { RouteInfo } from '@/components';
-import { ascDescToFixed, metresToKm, msToTime } from '@/helpers';
+import { ascDescToFixed, metresToKm, msToTime } from '@/shared';
 import {
   AscendSvgr,
   DescendSvgr,
   DistanceSvgr,
   TimeSvgr,
 } from '@/assets/icons/index.svgr';
+
+import { RouteInfo } from '../RouteInfo';
 
 import s from './RouteStats.module.css';
 

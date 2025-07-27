@@ -1,1 +1,0 @@
-export { fetchRoute } from './fetchRoute';

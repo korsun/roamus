@@ -5,13 +5,12 @@ import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
+import { MapService } from './mapService';
 import {
   DEFAULT_POSITION_COORDS,
   endMarkerStyle,
   interimMarkerStyle,
-} from '../../helpers';
-
-import { MapService } from './mapService';
+} from './helpers';
 
 describe('MapService', () => {
   let mapService: MapService;

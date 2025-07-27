@@ -2,9 +2,10 @@ import { useState } from 'react';
 import cx from 'classnames';
 import { Engine } from '@common/types';
 
-import { useStore } from '@/hooks';
-import { Error, Route } from '@/components';
+import { useStore } from '@/services';
+import { Error } from '@/shared/ui';
 
+import { Route } from './ui';
 import s from './SidePanel.module.css';
 
 export const SidePanel = () => {

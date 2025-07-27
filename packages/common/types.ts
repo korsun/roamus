@@ -93,3 +93,13 @@ export type ProxyServerPayload = {
 };
 
 export type ProxyServerResponse = Path;
+
+export const isGraphHopperResponse = (
+  data: unknown,
+): data is GraphHopperResponse => {
+  return typeof data === 'object' && data !== null && 'paths' in data;
+};
+
+export const isORSResponse = (data: unknown): data is ORSResponse => {
+  return typeof data === 'object' && data !== null && 'features' in data;
+};
