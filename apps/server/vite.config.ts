@@ -1,8 +1,6 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import dotenv from 'dotenv';
 
-dotenv.config();
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: __dirname,
@@ -33,7 +31,6 @@ export default defineConfig({
   },
   ssr: {
     target: 'node',
-    noExternal: true,
   },
   plugins: [],
   define: {
