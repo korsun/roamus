@@ -86,28 +86,26 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         },
       )
         .then((raw) => raw.json())
-        .then((data: ORSResponse) => {
-          const feature = data?.features?.[0];
+        .then((data: unknown) => {
+          if (isORSResponse(data)) {
+            const feature = data?.features?.[0];
 
-          return {
-            bbox: data.bbox,
-            points: feature,
-            distance: feature.properties.summary.distance,
-            // ORS sends duration in seconds
-            time: feature.properties.summary.duration * 1000,
-            ascend: feature.properties.ascent,
-            descend: feature.properties.descent,
-          };
+            return {
+              bbox: data.bbox,
+              points: feature,
+              distance: feature.properties.summary.distance,
+              // ORS sends duration in seconds
+              time: feature.properties.summary.duration * 1000,
+              ascend: feature.properties.ascent,
+              descend: feature.properties.descent,
+            };
+          }
         });
   }
 
   result
     .then((data: unknown) => {
-      if (isORSResponse(data) || isGraphHopperResponse(data)) {
-        res.status(200).json(data);
-      } else {
-        throw new Error('Invalid response');
-      }
+      res.status(200).json(data);
     })
     .catch((err: Error) => {
       res.status(400);

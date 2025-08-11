@@ -9,15 +9,28 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ['https://roamus-client.vercel.app', /\.vercel\.app$/i],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
-app.options('*', cors());
+const corsOptions = {
+  origin: (
+    origin?: string,
+    cb?: (err: Error | null, result: boolean) => void,
+  ) => {
+    if (!origin) {
+      return cb?.(null, true); // for non-browser requests
+    }
+
+    const ok =
+      origin === 'https://roamus-client.vercel.app' ||
+      /\.vercel\.app$/i.test(origin) ||
+      /localhost:3000$/i.test(origin);
+    cb?.(ok ? null : new Error('CORS blocked'), ok);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  maxAge: 86400,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 app.use('/api', routing);
