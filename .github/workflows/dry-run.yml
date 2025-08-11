@@ -43,10 +43,10 @@ jobs:
       run: pnpm lint
 
     - name: Build server
-      run: pnpm build:server
+      run: pnpm server:build
 
     - name: Build client
-      run: pnpm build:client
+      run: pnpm client:build
 
     - name: Test
       run: pnpm test
