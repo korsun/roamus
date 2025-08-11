@@ -6,7 +6,7 @@
 				"vite/client"
 			]
   },
-  "include": ["src"],
+  "include": ["src", "api"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "esm": true,
