@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
-import { routing } from '@/routes/routing';
-import { errorHandler } from '@/middleware/errorMiddleware';
+import { routing } from './routes/routing';
+import { errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
 
