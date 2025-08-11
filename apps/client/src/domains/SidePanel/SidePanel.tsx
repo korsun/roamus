@@ -28,7 +28,6 @@ export const SidePanel = () => {
         })}
       >
         <p>Click on the map to set some markers</p>
-
         {Object.entries(routes).map(([name, engine]) => (
           <Route
             key={name}
@@ -37,7 +36,6 @@ export const SidePanel = () => {
             setActiveEngines={setActiveEngines}
           />
         ))}
-
         {Object.values(routes).some((route) => route.path) && (
           <section className={s.section}>
             <button
@@ -51,7 +49,7 @@ export const SidePanel = () => {
             </button>
           </section>
         )}
-
+        gggg
         <Error message={routes.graphhopper.error} />
       </div>
 

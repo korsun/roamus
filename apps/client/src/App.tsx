@@ -1,10 +1,10 @@
+import { StrictMode } from 'react';
+
 import { Map, SidePanel } from '@/domains';
 
-import './App.module.css';
-
 export const App = () => (
-  <>
+  <StrictMode>
     <Map />
     <SidePanel />
-  </>
+  </StrictMode>
 );

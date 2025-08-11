@@ -21,13 +21,13 @@ This project uses Vite for both frontend and backend development.
 2. Start the development servers:
    - For frontend development:
      ```bash
-     pnpm dev:client
+     pnpm client:dev
      ```
      Runs the Vite dev server on http://localhost:3000
 
    - For backend development:
      ```bash
-     pnpm dev:server
+     pnpm server:dev
      ```
      Runs the backend server with hot reload
 
@@ -45,7 +45,7 @@ This project uses Vite for both frontend and backend development.
 
 2. Start the production server:
    ```bash
-   pnpm start:server
+   pnpm server:start
    ```
 
 ### Project Structure
