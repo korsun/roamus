@@ -37,7 +37,6 @@ jobs:
         GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
         THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
         MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
-        API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
     - name: Lint
       run: pnpm lint
