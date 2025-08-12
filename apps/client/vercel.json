@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://roamus.onrender.com/api/:path*" }
+    { "source": "/api/(.*)", "destination": "https://roamus.onrender.com/api/$1" }
   ]
 }
