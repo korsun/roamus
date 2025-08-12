@@ -34,8 +34,8 @@ describe('requestId', () => {
 
   it('takes id from header', () => {
     const { req, res, next } = mk();
-    // Using type assertion for testing purposes
     const mockGet = vi.fn().mockReturnValue('abc-123');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req.get = mockGet as any;
 
     requestId(req, res, next);
@@ -49,6 +49,7 @@ describe('requestId', () => {
     const { req, res, next } = mk();
     const mockUuid = '123e4567-e89b-12d3-a456-426614174000';
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (crypto.randomUUID as any).mockReturnValue(mockUuid);
 
     requestId(req, res, next);
