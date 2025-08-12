@@ -49,7 +49,6 @@ export const SidePanel = () => {
             </button>
           </section>
         )}
-        gggg
         <Error message={routes.graphhopper.error} />
       </div>
 
