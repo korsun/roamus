@@ -1,6 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-export const errorHandler = (error: Error, _: Request, res: Response) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const errorHandler = (
+  error: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
   res.status(statusCode);

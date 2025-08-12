@@ -18,7 +18,8 @@ const format =
 
 export const logging = morgan(format, {
   skip: (req: MorganRequest) => {
-    const path = req.path || req.originalUrl || req.url || '/';
-    return path === '/api/health';
+    const raw = req.path || req.originalUrl || req.url || '/';
+
+    return /^\/api\/health\/?$/.test(raw.split('?')[0]);
   },
 });

@@ -15,6 +15,7 @@ dotenv.config();
 
 const app = express();
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(compression());
 
@@ -57,7 +58,16 @@ server.setTimeout(30_000);
 server.headersTimeout = 35_000;
 server.keepAliveTimeout = 5_000;
 
-const shutdown = () => {
+let isShuttingDown = false;
+const shutdown = (reason: string) => {
+  if (isShuttingDown) {
+    return;
+  }
+
+  isShuttingDown = true;
+
+  console.error(`Shutting down: ${reason}`);
+
   server.close(() => process.exit(0));
   setTimeout(() => process.exit(1), 10_000).unref();
 };
