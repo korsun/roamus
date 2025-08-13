@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Coordinate } from 'ol/coordinate';
-import { Engine } from '@common/types';
+import type { Coordinate, Engine } from '@common/schemas/routing';
 
 import { GraphHopperLimitError, MapService, useStore } from '@/services';
 import { fetchRoute } from '@/services/api/apiRoutes';
@@ -37,7 +36,7 @@ export const useMap = ({ styles }: { styles: Dictionary<string> }) => {
   }, [cleanMap, initMap, styles]);
 
   useEffect(() => {
-    const applyRoute = async (coordinates: Coordinate[]) => {
+    const applyRoute = async (coordinates: [Coordinate, Coordinate]) => {
       if (!coordinates.length) {
         return;
       }

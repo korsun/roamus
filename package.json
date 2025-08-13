@@ -59,5 +59,8 @@
     "./**/*.{ts,tsx} !(*.d.ts) !(*.spec.ts)": [
       "pnpm lint"
     ]
+  },
+  "dependencies": {
+    "valibot": "^1.1.0"
   }
 }

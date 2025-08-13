@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { Engine, Path } from '@common/types';
+import { Engine, Path } from '@common/schemas/routing';
 
 export type Route = {
   path?: Path;

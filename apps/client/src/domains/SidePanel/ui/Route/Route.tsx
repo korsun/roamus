@@ -1,4 +1,4 @@
-import { Engine } from '@common/types';
+import { Engine } from '@common/schemas/routing';
 
 import type { Route as TRoute } from '@/services';
 
