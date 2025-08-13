@@ -4,13 +4,15 @@ import { Engine } from '@common/schemas/routing';
 
 import { useStore } from '@/services';
 import { Error } from '@/shared/ui';
+import { useAlarm } from '@/shared/helpers';
 
 import { Route } from './ui';
 import s from './SidePanel.module.css';
 
 export const SidePanel = () => {
+  useAlarm();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { routes, setActiveEngines, setPath } = useStore();
+  const { routes, setActiveEngines, setPath, isServerAwake } = useStore();
 
   const handleClick = () => {
     setIsCollapsed(!isCollapsed);
@@ -48,6 +50,9 @@ export const SidePanel = () => {
               Clear route
             </button>
           </section>
+        )}
+        {isServerAwake === false && (
+          <Error message="Server is sleeping. Wait a bit..." />
         )}
         <Error message={routes.graphhopper.error} />
       </div>
