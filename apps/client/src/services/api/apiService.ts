@@ -1,4 +1,3 @@
-import fetch from 'cross-fetch';
 import { Path } from '@common/types';
 
 import { GraphHopperLimitError } from './apiErrors';

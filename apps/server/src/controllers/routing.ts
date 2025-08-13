@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import fetch from 'cross-fetch';
 import asyncHandler from 'express-async-handler';
 import {
   GraphHopperPayload,
@@ -15,6 +14,8 @@ const isGraphHopperResponse = (data: unknown): data is GraphHopperResponse => {
 const isORSResponse = (data: unknown): data is ORSResponse => {
   return typeof data === 'object' && data !== null && 'features' in data;
 };
+
+const ABORT_TIMEOUT = 15_000;
 
 /**
  * @desc Map routing between given points
@@ -50,13 +51,17 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           headers: {
             'Content-Type': 'application/json',
           },
+          signal: AbortSignal.timeout(ABORT_TIMEOUT),
         },
       )
         .then((raw) => raw.json())
         .then((data: unknown) => {
-          if (isGraphHopperResponse(data)) {
-            return data?.paths?.[0];
+          if (!isGraphHopperResponse(data)) {
+            res.status(502);
+            throw new Error('GraphHopper: unexpected response');
           }
+
+          return data?.paths?.[0];
         });
 
       break;
@@ -83,23 +88,26 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
             'Content-Type': 'application/json',
             Authorization: import.meta.env.VITE_OPENROUTESERVICE_API_KEY,
           },
+          signal: AbortSignal.timeout(ABORT_TIMEOUT),
         },
       )
         .then((raw) => raw.json())
         .then((data: unknown) => {
-          if (isORSResponse(data)) {
-            const feature = data?.features?.[0];
-
-            return {
-              bbox: data.bbox,
-              points: feature,
-              distance: feature.properties.summary.distance,
-              // ORS sends duration in seconds
-              time: feature.properties.summary.duration * 1000,
-              ascend: feature.properties.ascent,
-              descend: feature.properties.descent,
-            };
+          if (!isORSResponse(data)) {
+            res.status(502);
+            throw new Error('OpenRouteService: unexpected response');
           }
+          const feature = data?.features?.[0];
+
+          return {
+            bbox: data.bbox,
+            points: feature,
+            distance: feature.properties.summary.distance,
+            // ORS sends duration in seconds
+            time: feature.properties.summary.duration * 1000,
+            ascend: feature.properties.ascent,
+            descend: feature.properties.descent,
+          };
         });
   }
 
@@ -108,7 +116,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
       res.status(200).json(data);
     })
     .catch((err: Error) => {
-      res.status(400);
+      res.status(502);
       throw new Error(err.message);
     });
 });
