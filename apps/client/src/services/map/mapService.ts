@@ -13,7 +13,7 @@ import {
 import GeoJSON from 'ol/format/GeoJSON';
 import { Attribution, ScaleLine, Zoom } from 'ol/control';
 import { Point } from 'ol/geom';
-import { Engine, Path } from '@common/types';
+import { Engine, Path } from '@common/schemas/routing';
 
 import { EventEmitter, getRetinaMod } from '@/shared';
 

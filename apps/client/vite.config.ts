@@ -2,6 +2,7 @@ import { resolve } from 'path';
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   root: __dirname,
@@ -18,18 +19,15 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    port: 3000,
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: true,
   },
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@common': resolve(__dirname, '../common'),
-    },
-  },
+  plugins: [react(), tsconfigPaths()],
   css: {
     modules: {
       localsConvention: 'camelCaseOnly',

@@ -1,19 +1,13 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
+import * as v from 'valibot';
 import {
   GraphHopperPayload,
-  GraphHopperResponse,
+  GraphHopperResponseSchema,
   ORSPayload,
-  ORSResponse,
-} from '@common/types';
-
-const isGraphHopperResponse = (data: unknown): data is GraphHopperResponse => {
-  return typeof data === 'object' && data !== null && 'paths' in data;
-};
-
-const isORSResponse = (data: unknown): data is ORSResponse => {
-  return typeof data === 'object' && data !== null && 'features' in data;
-};
+  ORSResponseSchema,
+  ProxyServerPayloadSchema,
+} from '@common/schemas';
 
 const ABORT_TIMEOUT = 15_000;
 
@@ -22,8 +16,17 @@ const ABORT_TIMEOUT = 15_000;
  * @route POST /api/routing/
  */
 export const buildRoute = asyncHandler((req: Request, res: Response) => {
+  const parsed = v.safeParse(ProxyServerPayloadSchema, req.body);
+
+  if (!parsed.success) {
+    res.status(400);
+    throw new Error(
+      `Invalid payload: expected ${JSON.stringify(ProxyServerPayloadSchema, null, 2)}`,
+    );
+  }
+
   let payload: GraphHopperPayload | ORSPayload;
-  const { engine, coordinates } = req.body;
+  const { engine, coordinates } = parsed.output;
 
   let result;
 
@@ -55,13 +58,21 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         },
       )
         .then((raw) => raw.json())
-        .then((data: unknown) => {
-          if (!isGraphHopperResponse(data)) {
-            res.status(502);
-            throw new Error('GraphHopper: unexpected response');
-          }
+        .then((json: unknown) => {
+          const gh = v.safeParse(GraphHopperResponseSchema, json);
 
-          return data?.paths?.[0];
+          if (!gh.success) {
+            res.status(502);
+            const formatted = gh.issues
+              .map(
+                (i) =>
+                  `Expected ${JSON.stringify(i.expected)}, received ${i.received}`,
+              )
+              .join('\n');
+
+            throw new Error(`GraphHopper: unexpected response.\n${formatted}`);
+          }
+          return gh.output.paths[0];
         });
 
       break;
@@ -92,15 +103,26 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         },
       )
         .then((raw) => raw.json())
-        .then((data: unknown) => {
-          if (!isORSResponse(data)) {
+        .then((json: unknown) => {
+          const ors = v.safeParse(ORSResponseSchema, json);
+
+          if (!ors.success) {
             res.status(502);
-            throw new Error('OpenRouteService: unexpected response');
+            const formatted = ors.issues
+              .map(
+                (i) =>
+                  `Expected ${JSON.stringify(i.expected)}, received ${i.received}`,
+              )
+              .join('\n');
+
+            throw new Error(
+              `OpenRouteService: unexpected response.\n${formatted}`,
+            );
           }
-          const feature = data?.features?.[0];
+          const feature = ors.output.features?.[0];
 
           return {
-            bbox: data.bbox,
+            bbox: ors.output.bbox,
             points: feature,
             distance: feature.properties.summary.distance,
             // ORS sends duration in seconds
@@ -116,6 +138,11 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
       res.status(200).json(data);
     })
     .catch((err: Error) => {
+      if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+        res.status(504);
+        throw new Error('Upstream timeout');
+      }
+
       res.status(502);
       throw new Error(err.message);
     });

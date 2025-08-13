@@ -1,10 +1,13 @@
 import { resolve } from 'path';
 
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+const repoRoot = resolve(__dirname, '..', '..');
 
 export default defineConfig({
   root: __dirname,
-  envDir: resolve(__dirname, '../..'),
+  envDir: repoRoot,
   build: {
     ssr: true,
     outDir: 'dist',
@@ -19,20 +22,10 @@ export default defineConfig({
       },
     },
   },
-  resolve: {
-    alias: [
-      { find: '@', replacement: resolve(__dirname, './src') },
-      { find: '@common', replacement: resolve(__dirname, '../common') },
-      {
-        find: '@common/types',
-        replacement: resolve(__dirname, '../common/types.ts'),
-      },
-    ],
-  },
   ssr: {
     target: 'node',
   },
-  plugins: [],
+  plugins: [tsconfigPaths()],
   define: {
     'process.env.NODE_ENV': JSON.stringify(
       process.env.NODE_ENV ?? 'development',

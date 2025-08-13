@@ -1,4 +1,4 @@
-import { Path } from '@common/types';
+import { Path } from '@common/schemas';
 
 import { GraphHopperLimitError } from './apiErrors';
 

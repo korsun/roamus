@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import cx from 'classnames';
-import { Engine } from '@common/types';
+import { Engine } from '@common/schemas/routing';
 
 import { useStore } from '@/services';
 import { Error } from '@/shared/ui';
