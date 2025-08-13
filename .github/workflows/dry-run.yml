@@ -49,3 +49,7 @@ jobs:
 
     - name: Test
       run: pnpm test
+      env:
+        VITE_OPENROUTESERVICE_API_KEY: "test"
+        VITE_GRAPHHOPER_API_KEY: "test"
+
