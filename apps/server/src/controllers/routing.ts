@@ -9,6 +9,8 @@ import {
   ProxyServerPayloadSchema,
 } from '@common/schemas';
 
+import { HttpError } from '../middleware/errorHandler';
+
 const ABORT_TIMEOUT = 15_000;
 
 /**
@@ -19,8 +21,8 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
   const parsed = v.safeParse(ProxyServerPayloadSchema, req.body);
 
   if (!parsed.success) {
-    res.status(400);
-    throw new Error(
+    throw new HttpError(
+      400,
       `Invalid payload: expected ${JSON.stringify(ProxyServerPayloadSchema, null, 2)}`,
     );
   }
@@ -41,9 +43,8 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         optimize: 'false',
       };
 
-      if (!import.meta.env.VITE_GRAPHHOPER_API_KEY) {
-        res.status(400);
-        throw new Error('Missing GraphHopper API key');
+      if (!import.meta.env.VITE_GRAPHHOPER_API_KEY?.trim()) {
+        throw new HttpError(400, 'Missing GraphHopper API key');
       }
 
       result = fetch(
@@ -62,7 +63,6 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           const gh = v.safeParse(GraphHopperResponseSchema, json);
 
           if (!gh.success) {
-            res.status(502);
             const formatted = gh.issues
               .map(
                 (i) =>
@@ -85,9 +85,8 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         instructions: false,
       };
 
-      if (!import.meta.env.VITE_OPENROUTESERVICE_API_KEY) {
-        res.status(400);
-        throw new Error('Missing OpenRouteService API key');
+      if (!import.meta.env.VITE_OPENROUTESERVICE_API_KEY?.trim()) {
+        throw new HttpError(400, 'Missing OpenRouteService API key');
       }
 
       result = fetch(
@@ -107,7 +106,6 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           const ors = v.safeParse(ORSResponseSchema, json);
 
           if (!ors.success) {
-            res.status(502);
             const formatted = ors.issues
               .map(
                 (i) =>
@@ -121,6 +119,10 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
           }
           const feature = ors.output.features?.[0];
 
+          if (!feature) {
+            throw new Error('OpenRouteService: no features found');
+          }
+
           return {
             bbox: ors.output.bbox,
             points: feature,
@@ -133,17 +135,15 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
         });
   }
 
-  result
+  return result
     .then((data: unknown) => {
       res.status(200).json(data);
     })
     .catch((err: Error) => {
       if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-        res.status(504);
-        throw new Error('Upstream timeout');
+        throw new HttpError(504, 'Upstream timeout');
       }
 
-      res.status(502);
-      throw new Error(err.message);
+      throw new HttpError(502, err.message);
     });
 });
