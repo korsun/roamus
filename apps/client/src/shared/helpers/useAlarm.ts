@@ -13,21 +13,36 @@ export const useAlarm = () => {
       return;
     }
 
+    let isCancelled = false;
+
     Promise.race([
       new Promise((_resolve, reject) => setTimeout(reject, TIMEOUT)),
       checkHealth(),
     ])
       .catch(() => {
+        if (isCancelled) {
+          return;
+        }
         setServerAwake(false);
         return checkHealth();
       })
       .then(
         () => {
+          if (isCancelled) {
+            return;
+          }
           setServerAwake(true);
         },
         () => {
+          if (isCancelled) {
+            return;
+          }
           setServerAwake(false);
         },
       );
+
+    return () => {
+      isCancelled = true;
+    };
   }, [setServerAwake, isServerAwake]);
 };
