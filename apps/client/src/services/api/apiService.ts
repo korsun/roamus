@@ -34,17 +34,30 @@ const makeRequest =
       }
 
       const response = await fetch(urlToFetch, options);
-      const json = await response.json();
 
-      if (!response.ok) {
-        if (urlToFetch.includes('graphhopper')) {
-          throw new GraphHopperLimitError(json.message, response.status);
-        }
+      // Check if the response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      let responseData;
 
-        throw new Error(json.message);
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json();
+      } else {
+        // For non-JSON responses, use the response text
+        responseData = await response.text();
       }
 
-      return await json;
+      if (!response.ok && responseData) {
+        if (urlToFetch.includes('graphhopper')) {
+          throw new GraphHopperLimitError(
+            responseData.message,
+            response.status,
+          );
+        }
+
+        throw new Error(responseData.message);
+      }
+
+      return await responseData;
     } catch (error) {
       /**
        * @todo normal logging

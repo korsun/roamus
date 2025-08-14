@@ -8,3 +8,9 @@ export const fetchRoute = async (payload: ProxyServerPayload) => {
     payload,
   });
 };
+
+export const checkHealth = async () => {
+  return apiService.get({
+    url: '/api/health',
+  });
+};

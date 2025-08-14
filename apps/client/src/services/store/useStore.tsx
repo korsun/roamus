@@ -14,6 +14,8 @@ export type Store = {
   setPath: (engine: Engine, path: Path | undefined) => void;
   setError: (err: string) => void;
   setActiveEngines: (engine: Engine) => void;
+  isServerAwake: boolean | undefined;
+  setServerAwake: (isAwake: boolean) => void;
 };
 
 export const useStore = create<Store>()(
@@ -64,5 +66,7 @@ export const useStore = create<Store>()(
           },
         },
       })),
+    isServerAwake: undefined,
+    setServerAwake: (isAwake) => set({ isServerAwake: isAwake }),
   })),
 );
