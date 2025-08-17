@@ -2,12 +2,10 @@ import cx from 'classnames';
 
 import { ascDescToFixed, metresToKm, msToTime } from '@/shared';
 
-import {
-  AscendSvgr,
-  DescendSvgr,
-  DistanceSvgr,
-  TimeSvgr,
-} from '../../assets/index.svgr';
+import Ascend from '../../assets/ascend.svg?react';
+import Descend from '../../assets/descend.svg?react';
+import Distance from '../../assets/distance.svg?react';
+import Time from '../../assets/time.svg?react';
 import { RouteInfo } from '../RouteInfo';
 
 import s from './RouteStats.module.css';
@@ -24,22 +22,22 @@ export const RouteStats = ({ distance, time, ascend, descend }: Props) => (
     <RouteInfo
       title="Distance"
       text={metresToKm(distance)}
-      icon={<DistanceSvgr size={32} />}
+      icon={<Distance width={32} height={32} />}
     />
     <RouteInfo
       title="Time"
       text={msToTime(time)}
-      icon={<TimeSvgr size={32} />}
+      icon={<Time width={32} height={32} />}
     />
     <RouteInfo
       title="Ascend"
       text={ascDescToFixed(ascend)}
-      icon={<AscendSvgr size={32} />}
+      icon={<Ascend width={32} height={32} />}
     />
     <RouteInfo
       title="Descend"
       text={ascDescToFixed(descend)}
-      icon={<DescendSvgr size={32} />}
+      icon={<Descend width={32} height={32} />}
     />
   </section>
 );
