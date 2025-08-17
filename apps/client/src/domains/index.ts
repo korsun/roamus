@@ -1,2 +1,2 @@
-export * from './Map';
-export * from './Routing';
+export * from './map';
+export * from './routing';
