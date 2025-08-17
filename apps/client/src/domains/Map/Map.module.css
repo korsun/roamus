@@ -1,12 +1,10 @@
 .mapContainer {
-  display: 'flex';
-  justify-content: center;
-  align-items: center;
   width: 100vw;
   height: 100vh;
 }
 
 .zoom {
+	position: absolute;
   top: 0.5em;
   right: 0.5em;
 }
