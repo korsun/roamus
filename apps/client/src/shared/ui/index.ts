@@ -1,1 +1,2 @@
-export { Error } from './Error';
+export { Error } from './error';
+export { SidePanel } from './sidePanel/SidePanel';

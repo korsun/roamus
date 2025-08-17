@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
   root: __dirname,
@@ -27,7 +28,16 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    svgr({
+      include: '**/*.svg?react',
+      svgrOptions: {
+        svgo: false,
+      },
+    }),
+  ],
   css: {
     modules: {
       localsConvention: 'camelCaseOnly',

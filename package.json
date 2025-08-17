@@ -17,7 +17,6 @@
     "server:dev": "pnpm --filter @roamus/server dev",
     "server:build": "pnpm --filter @roamus/server build",
     "server:start": "NODE_ENV=production pnpm --filter @roamus/server start",
-    "build:svg": "svgr -d . . --filename-case kebab --ext 'svgr.tsx'",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
     "test": "vitest --config='./testing/vitest.config.js'",
     "prettier": "prettier --write .",

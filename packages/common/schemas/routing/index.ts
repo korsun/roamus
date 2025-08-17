@@ -6,7 +6,7 @@ const EngineSchema = v.union([
 ]);
 export type Engine = v.InferOutput<typeof EngineSchema>;
 
-export const CoordinateSchema = v.looseTuple([v.number(), v.number()]);
+export const CoordinateSchema = v.array(v.number());
 export type Coordinate = v.InferOutput<typeof CoordinateSchema>;
 
 export const BBoxSchema = v.array(v.number());
