@@ -1,6 +1,5 @@
-import { IncomingMessage } from 'http';
-
-import { type Request } from 'express';
+import type { IncomingMessage } from 'node:http';
+import type { Request } from 'express';
 import morgan from 'morgan';
 
 interface MorganRequest extends IncomingMessage {

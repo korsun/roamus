@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import cx from 'classnames';
+import { useState } from 'react';
 
 import s from './SidePanel.module.css';
 
@@ -24,7 +24,7 @@ export const SidePanel = ({ children }: React.PropsWithChildren) => {
         {children}
       </div>
 
-      <button className={s.collapseButton} onClick={handleClick}>
+      <button className={s.collapseButton} onClick={handleClick} type="button">
         {isCollapsed ? '>' : '<'}
       </button>
     </div>

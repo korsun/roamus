@@ -1,1 +1,2 @@
-pnpm run pre-commit
+pnpm format
+git add .

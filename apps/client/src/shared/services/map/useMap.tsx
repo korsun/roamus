@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Coordinate, Engine } from '@common/schemas/routing';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { GraphHopperLimitError, MapService, useStore } from '@/shared/services';
 import { fetchRoute } from '@/shared/services/api/apiRoutes';

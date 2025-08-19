@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import http from 'http';
-import { AddressInfo } from 'net';
+// biome-ignore-all lint/suspicious/noExplicitAny: test mocks
+import http from 'node:http';
+import type { AddressInfo } from 'node:net';
 
 import request from 'supertest';
 import {
@@ -15,7 +15,7 @@ import {
 } from 'vitest';
 
 import { app } from '../app';
-import { HttpError, errorHandler } from '../middleware/errorHandler';
+import { errorHandler, HttpError } from '../middleware/errorHandler';
 
 describe('Express Server', () => {
   let server: http.Server;

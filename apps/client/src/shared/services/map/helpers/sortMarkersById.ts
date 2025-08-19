@@ -1,4 +1,4 @@
-import { FeatureLike } from 'ol/Feature';
+import type { FeatureLike } from 'ol/Feature';
 
 export const sortMarkersById = (a: FeatureLike, b: FeatureLike) => {
   const aId = a.getId();

@@ -2,54 +2,52 @@ name: Dry-Run
 
 on:
   pull_request:
-    branches: [ $default-branch ]
+    branches: [$default-branch]
 
   push:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - uses: pnpm/action-setup@v4
-      name: Install pnpm
-      with:
-        version: 10
-        run_install: false
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 22
-        cache: 'pnpm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: "pnpm"
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-      env:
-        GRAPHHOPER_API_KEY: ${{ secrets.GRAPHHOPER_API_KEY }}
-        OPENROUTESERVICE_API_KEY: ${{ secrets.OPENROUTESERVICE_API_KEY }}
-        GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
-        THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
-        MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          GRAPHHOPER_API_KEY: ${{ secrets.GRAPHHOPER_API_KEY }}
+          OPENROUTESERVICE_API_KEY: ${{ secrets.OPENROUTESERVICE_API_KEY }}
+          GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
 
-    - name: Lint
-      run: pnpm lint
+      - name: Lint
+        run: pnpm lint:ci
 
-    - name: Build server
-      run: pnpm server:build
+      - name: Build server
+        run: pnpm server:build
 
-    - name: Build client
-      run: pnpm client:build
+      - name: Build client
+        run: pnpm client:build
 
-    - name: Test
-      run: pnpm test
-      env:
-        VITE_OPENROUTESERVICE_API_KEY: "test"
-        VITE_GRAPHHOPER_API_KEY: "test"
-
+      - name: Test
+        run: pnpm test
+        env:
+          VITE_OPENROUTESERVICE_API_KEY: "test"
+          VITE_GRAPHHOPER_API_KEY: "test"
