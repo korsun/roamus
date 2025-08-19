@@ -7,8 +7,20 @@ import { Route } from './ui';
 import { useAlarm } from './useAlarm';
 
 export const Routing = () => {
-  const { routes, setActiveEngines, setPath, isServerAwake } = useStore();
+  const {
+    routes,
+    setActiveEngines,
+    setPath,
+    isServerAwake,
+    setGraphhopperLimits,
+  } = useStore();
   useAlarm();
+  const handleClearRoute = () => {
+    for (const name in routes) {
+      setPath(name as Engine, undefined);
+    }
+    setGraphhopperLimits(false);
+  };
 
   return (
     <>
@@ -23,14 +35,7 @@ export const Routing = () => {
       ))}
       {Object.values(routes).some((route) => route.path) && (
         <section className={s.section}>
-          <button
-            type="button"
-            onClick={() => {
-              for (const name in routes) {
-                setPath(name as Engine, undefined);
-              }
-            }}
-          >
+          <button type="button" onClick={handleClearRoute}>
             Clear route
           </button>
         </section>

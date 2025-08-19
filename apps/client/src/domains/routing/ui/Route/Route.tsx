@@ -19,7 +19,7 @@ export const Route = ({ name, engine, setActiveEngines }: Props) => (
         type="checkbox"
         id={name}
         disabled={engine.hasLimits}
-        onChange={() => setActiveEngines(name as Engine)}
+        onChange={() => setActiveEngines(name)}
         checked={engine.isActive}
       />
       <label htmlFor={name}>{name}</label>

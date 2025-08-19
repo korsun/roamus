@@ -275,6 +275,36 @@ describe('Express Server', () => {
         expect(res.status).toBe(502);
         expect(res.body.message).toMatch(/GraphHopper: unexpected response/i);
       });
+
+      it('504 — GraphHopper limit', async () => {
+        setViteEnv('VITE_GRAPHHOPER_API_KEY', 'test-gh');
+
+        vi.spyOn(globalThis, 'fetch' as any).mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            message: 'Minutely API limit heavily violated.',
+          }),
+        });
+
+        const res = await request(app)
+          .post('/api/routing')
+          .send({
+            engine: 'graphhopper',
+            coordinates: [
+              [0, 0],
+              [1, 1],
+              [2, 2],
+            ],
+          });
+
+        expect(res.status).toBe(504);
+        expect(res.body.message).toMatch(
+          /Minutely API limit heavily violated/i,
+        );
+        expect(res.body.details.type).toBe('limit');
+        expect(res.body.details.engine).toBe('graphhopper');
+      });
     });
   });
 

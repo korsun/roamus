@@ -28,6 +28,10 @@
       "suspicious": {
         "noConsole": "warn",
         "noShadowRestrictedNames": "off"
+      },
+      "complexity": {
+        "noUselessSwitchCase": "off",
+        "useLiteralKeys": "off"
       }
     }
   },

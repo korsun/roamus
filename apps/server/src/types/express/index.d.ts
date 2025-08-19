@@ -7,4 +7,7 @@ declare global {
       id?: string;
     }
   }
+  type Dictionary<T> = Record<string, T>;
+  // biome-ignore lint/suspicious/noExplicitAny: we need it
+  type AnyFunction = (...args: any[]) => any;
 }

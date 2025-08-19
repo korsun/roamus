@@ -14,7 +14,8 @@
     "paths": {
       "@/*": ["apps/client/src/*", "apps/server/src/*"],
       "@common/*": ["packages/common/*"],
-      "@common/schemas": ["packages/common/schemas/index.ts"]
+      "@common/schemas": ["packages/common/schemas/index.ts"],
+			"@common/schemas/*": ["packages/common/schemas/*"]
     }
   },
   "exclude": [
