@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import * as v from 'valibot';
 import {
-  GraphHopperPayload,
+  type GraphHopperPayload,
   GraphHopperResponseSchema,
-  ORSPayload,
+  type ORSPayload,
   ORSResponseSchema,
   ProxyServerPayloadSchema,
 } from '@common/schemas';
+import type { Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
+import * as v from 'valibot';
 
 import { HttpError } from '../middleware/errorHandler';
 
@@ -30,7 +30,7 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
   let payload: GraphHopperPayload | ORSPayload;
   const { engine, coordinates } = parsed.output;
 
-  let result;
+  let result: Promise<unknown>;
 
   switch (engine) {
     case 'graphhopper':

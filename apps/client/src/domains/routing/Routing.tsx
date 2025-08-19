@@ -1,11 +1,10 @@
-import { Engine } from '@common/schemas/routing';
+import type { Engine } from '@common/schemas/routing';
 
 import { useStore } from '@/shared/services';
 import { Error } from '@/shared/ui';
-
+import s from './Routing.module.css';
 import { Route } from './ui';
 import { useAlarm } from './useAlarm';
-import s from './Routing.module.css';
 
 export const Routing = () => {
   const { routes, setActiveEngines, setPath, isServerAwake } = useStore();
@@ -25,6 +24,7 @@ export const Routing = () => {
       {Object.values(routes).some((route) => route.path) && (
         <section className={s.section}>
           <button
+            type="button"
             onClick={() => {
               for (const name in routes) {
                 setPath(name as Engine, undefined);

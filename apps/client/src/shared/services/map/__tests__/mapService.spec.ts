@@ -1,17 +1,17 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Vector as VectorSource } from 'ol/source';
-import { Vector as VectorLayer } from 'ol/layer';
+import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
-import { Coordinate } from 'ol/coordinate';
+import type { Vector as VectorLayer } from 'ol/layer';
+import { Vector as VectorSource } from 'ol/source';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { COORDINATES_CHANGE_EVENT } from '../../emitter';
-import { MapService } from '../mapService';
 import {
   DEFAULT_POSITION_COORDS,
   endMarkerStyle,
   interimMarkerStyle,
 } from '../helpers';
+import { MapService } from '../mapService';
 
 describe('MapService', () => {
   let mapService: MapService;
@@ -88,7 +88,7 @@ describe('MapService', () => {
       expect(features[2].getId()).toBe('marker_end');
       expect(features[2].getStyle()).toBe(endMarkerStyle);
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- doesn't see a type of inherited method onEvent
+      // biome-ignore lint/suspicious/noTsIgnore: doesn't see a type of inherited method
       // @ts-ignore
       mapService.onEvent(
         COORDINATES_CHANGE_EVENT,

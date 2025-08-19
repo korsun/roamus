@@ -1,4 +1,5 @@
-import crypto from 'crypto';
+// biome-ignore-all lint/suspicious/noExplicitAny: test mocks
+import crypto from 'node:crypto';
 
 import type { NextFunction, Request, Response } from 'express';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -35,7 +36,6 @@ describe('requestId', () => {
   it('takes id from header', () => {
     const { req, res, next } = mk();
     const mockGet = vi.fn().mockReturnValue('abc-123');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req.get = mockGet as any;
 
     requestId(req, res, next);
@@ -48,8 +48,6 @@ describe('requestId', () => {
   it('generates id when header is missing', () => {
     const { req, res, next } = mk();
     const mockUuid = '123e4567-e89b-12d3-a456-426614174000';
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (crypto.randomUUID as any).mockReturnValue(mockUuid);
 
     requestId(req, res, next);

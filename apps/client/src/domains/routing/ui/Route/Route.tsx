@@ -1,4 +1,4 @@
-import { Engine } from '@common/schemas/routing';
+import type { Engine } from '@common/schemas/routing';
 
 import type { Route as TRoute } from '@/shared/services';
 
@@ -22,7 +22,7 @@ export const Route = ({ name, engine, setActiveEngines }: Props) => (
         onChange={() => setActiveEngines(name as Engine)}
         checked={engine.isActive}
       />
-      <label>{name}</label>
+      <label htmlFor={name}>{name}</label>
     </div>
 
     <RouteStats

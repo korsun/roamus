@@ -1,5 +1,5 @@
-import { type Emitter, type Unsubscribe, createNanoEvents } from 'nanoevents';
-import { type Coordinate } from '@common/schemas/routing';
+import type { Coordinate } from '@common/schemas/routing';
+import { createNanoEvents, type Emitter, type Unsubscribe } from 'nanoevents';
 
 export class EventEmitter<E extends Record<string, unknown>> {
   private emitter: Emitter<{ [K in keyof E]: (payload: E[K]) => void }> =
@@ -12,7 +12,7 @@ export class EventEmitter<E extends Record<string, unknown>> {
 
   public onEvent = <K extends keyof E>(
     eventName: K,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: literally any
     callback: (payload: E[K]) => any,
   ): Unsubscribe => this.emitter.on(eventName, callback);
 }

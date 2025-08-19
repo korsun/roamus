@@ -1,26 +1,25 @@
-import Map from 'ol/Map';
-// import OSM from 'ol/source/OSM.js'
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { Vector as VectorSource, XYZ } from 'ol/source';
-import View from 'ol/View';
-import { useGeographic } from 'ol/proj';
+import type { Engine, Path } from '@common/schemas/routing';
+import { Attribution, ScaleLine, Zoom } from 'ol/control';
+import GeoJSON from 'ol/format/GeoJSON';
+import type { Point } from 'ol/geom';
 import {
   Draw,
+  defaults as defaultInteractions,
   Modify,
   Snap,
-  defaults as defaultInteractions,
 } from 'ol/interaction';
-import GeoJSON from 'ol/format/GeoJSON';
-import { Attribution, ScaleLine, Zoom } from 'ol/control';
-import { Point } from 'ol/geom';
-import { Engine, Path } from '@common/schemas/routing';
-
+// import OSM from 'ol/source/OSM.js'
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import Map from 'ol/Map';
+import { useGeographic } from 'ol/proj';
+import { Vector as VectorSource, XYZ } from 'ol/source';
+import View from 'ol/View';
+import { getRetinaMod } from '@/shared/helpers';
 import {
   COORDINATES_CHANGE_EVENT,
   EventEmitter,
-  MapEvents,
+  type MapEvents,
 } from '@/shared/services/emitter';
-import { getRetinaMod } from '@/shared/helpers';
 
 import {
   endMarkerStyle,

@@ -1,6 +1,6 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export const requestId = (req: Request, res: Response, next: NextFunction) => {
   const id = req.get('x-request-id') || randomUUID();

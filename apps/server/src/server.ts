@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 
 import { app } from './app';
 
@@ -16,6 +16,7 @@ const shutdown = (reason: string) => {
 
   isShuttingDown = true;
 
+  // biome-ignore lint/suspicious/noConsole: log
   console.error(`Shutting down: ${reason}`);
 
   server.close(() => process.exit(0));
@@ -25,6 +26,6 @@ process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
 server.listen(PORT, () =>
-  // eslint-disable-next-line no-console
+  // biome-ignore lint/suspicious/noConsole: log
   console.log(`${'\u001b[1;34m'}Server listening on port ${PORT} 🚀🚀🚀`),
 );

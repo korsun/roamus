@@ -1,4 +1,4 @@
-import { ProxyServerPayload } from '@common/schemas/routing';
+import type { ProxyServerPayload } from '@common/schemas/routing';
 
 import { apiService } from '.';
 

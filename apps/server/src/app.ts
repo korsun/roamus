@@ -1,13 +1,12 @@
+import compression from 'compression';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
-import compression from 'compression';
-
-import { routes } from '@/routes';
 import { errorHandler } from '@/middleware/errorHandler';
-import { requestId } from '@/middleware/requestId';
 import { logging } from '@/middleware/logging';
+import { requestId } from '@/middleware/requestId';
+import { routes } from '@/routes';
 
 dotenv.config();
 

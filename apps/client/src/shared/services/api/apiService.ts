@@ -1,4 +1,4 @@
-import { Path } from '@common/schemas';
+import type { Path } from '@common/schemas';
 
 import { GraphHopperLimitError } from './apiErrors';
 
@@ -37,31 +37,32 @@ const makeRequest =
 
       // Check if the response is JSON before parsing
       const contentType = response.headers.get('content-type');
-      let responseData;
+      let responseData: unknown;
 
-      if (contentType && contentType.includes('application/json')) {
+      if (contentType?.includes('application/json')) {
         responseData = await response.json();
       } else {
         // For non-JSON responses, use the response text
         responseData = await response.text();
       }
 
-      if (!response.ok && responseData) {
-        if (urlToFetch.includes('graphhopper')) {
+      if (!response.ok && responseData && typeof responseData === 'object') {
+        if (urlToFetch.includes('graphhopper') && 'message' in responseData) {
           throw new GraphHopperLimitError(
-            responseData.message,
+            responseData.message as string,
             response.status,
           );
         }
 
-        throw new Error(responseData.message);
+        throw new Error((responseData as { message: string }).message);
       }
 
-      return await responseData;
+      return responseData as Path;
     } catch (error) {
       /**
        * @todo normal logging
        */
+      // biome-ignore lint/suspicious/noConsole: logging
       console.error(error);
       throw error;
     }
