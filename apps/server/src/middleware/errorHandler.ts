@@ -4,6 +4,7 @@ export class HttpError extends Error {
   constructor(
     public status: number,
     message: string,
+    public details?: Dictionary<unknown>,
   ) {
     super(message);
     this.name = 'HttpError';
@@ -34,8 +35,11 @@ export const errorHandler = (
       ? res.statusCode
       : 500;
 
+  const details = isHttpError(error) ? error.details : undefined;
+
   res.status(status).json({
     message: error.message || 'Internal Server Error',
+    details,
     stack: error.stack,
     requestId: req.id,
   });

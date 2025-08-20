@@ -166,13 +166,13 @@ export class MapService extends EventEmitter<MapEvents> {
     this.routeSources[engine].clear();
   };
 
-  public getMarkersSource() {
+  public getMarkersSource = () => {
     return this.markersSource;
-  }
+  };
 
-  public getRouteSource(engine: Engine) {
+  public getRouteSource = (engine: Engine) => {
     return this.routeSources[engine];
-  }
+  };
 
   private setMarkersRendering() {
     this.markersSource.on('addfeature', (e) => {
@@ -185,7 +185,7 @@ export class MapService extends EventEmitter<MapEvents> {
         e.feature?.setStyle(endMarkerStyle);
         markers.forEach((m, i) => {
           if (i !== 0 && i !== markers.length - 1) {
-            m.setId('marker_middle_' + i);
+            m.setId(`marker_middle_${i}`);
             m.setStyle(interimMarkerStyle);
           }
 

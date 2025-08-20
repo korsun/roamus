@@ -1,6 +1,8 @@
 import {
+  GraphHopperErrorResponseSchema,
   type GraphHopperPayload,
   GraphHopperResponseSchema,
+  GraphHopperSuccessResponseSchema,
   type ORSPayload,
   ORSResponseSchema,
   ProxyServerPayloadSchema,
@@ -69,10 +71,22 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
                   `Expected ${JSON.stringify(i.expected)}, received ${i.received}`,
               )
               .join('\n');
-
             throw new Error(`GraphHopper: unexpected response.\n${formatted}`);
           }
-          return gh.output.paths[0];
+
+          if (v.is(GraphHopperSuccessResponseSchema, gh.output)) {
+            return gh.output.paths[0];
+          }
+
+          if (v.is(GraphHopperErrorResponseSchema, gh.output)) {
+            // API warning from GH (e.g., rate limit)
+            throw new HttpError(504, gh.output.message, {
+              engine,
+              type: 'limit',
+            });
+          }
+
+          throw new Error('GraphHopper: unexpected response format');
         });
 
       break;
@@ -140,6 +154,10 @@ export const buildRoute = asyncHandler((req: Request, res: Response) => {
       res.status(200).json(data);
     })
     .catch((err: Error) => {
+      if (err instanceof HttpError) {
+        throw err;
+      }
+
       if (err.name === 'TimeoutError' || err.name === 'AbortError') {
         throw new HttpError(504, 'Upstream timeout');
       }

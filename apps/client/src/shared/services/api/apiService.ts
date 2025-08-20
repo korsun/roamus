@@ -1,6 +1,6 @@
 import type { Path } from '@common/schemas';
-
-import { GraphHopperLimitError } from './apiErrors';
+import { logError } from '@/shared/helpers';
+import { ApiError, type ErrorResponse, isErrorResponse } from './apiErrors';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -37,24 +37,25 @@ const makeRequest =
 
       // Check if the response is JSON before parsing
       const contentType = response.headers.get('content-type');
-      let responseData: unknown;
+      let responseData: Path | ErrorResponse | string;
 
       if (contentType?.includes('application/json')) {
-        responseData = await response.json();
+        responseData = await response.json(); // Path | ErrorResponse
       } else {
         // For non-JSON responses, use the response text
-        responseData = await response.text();
+        responseData = await response.text(); // string
       }
 
-      if (!response.ok && responseData && typeof responseData === 'object') {
-        if (urlToFetch.includes('graphhopper') && 'message' in responseData) {
-          throw new GraphHopperLimitError(
-            responseData.message as string,
-            response.status,
-          );
-        }
+      if (!response.ok) {
+        const errorData: ErrorResponse = isErrorResponse(responseData)
+          ? responseData
+          : { message: `HTTP ${response.status}` };
 
-        throw new Error((responseData as { message: string }).message);
+        throw new ApiError(
+          response.status,
+          errorData.message,
+          errorData.details,
+        );
       }
 
       return responseData as Path;
@@ -62,8 +63,7 @@ const makeRequest =
       /**
        * @todo normal logging
        */
-      // biome-ignore lint/suspicious/noConsole: logging
-      console.error(error);
+      logError(error);
       throw error;
     }
   };

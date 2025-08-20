@@ -12,7 +12,7 @@ export type Route = {
 export type Store = {
   routes: Record<Engine, Route>;
   setPath: (engine: Engine, path: Path | undefined) => void;
-  setError: (err: string) => void;
+  setGraphhopperLimits: (hasLimits: boolean, error?: string) => void;
   setActiveEngines: (engine: Engine) => void;
   isServerAwake: boolean | undefined;
   setServerAwake: (isAwake: boolean) => void;
@@ -40,18 +40,18 @@ export const useStore = create<Store>()(
           },
         },
       })),
-    setError: (error) =>
+    setGraphhopperLimits: (hasLimits, error) =>
       set(({ routes }) => ({
         routes: {
           ...routes,
           openrouteservice: {
             ...routes.openrouteservice,
-            isActive: true,
+            isActive: hasLimits,
           },
           graphhopper: {
             ...routes.graphhopper,
-            isActive: false,
-            hasLimits: true,
+            isActive: !hasLimits,
+            hasLimits,
             error,
           },
         },

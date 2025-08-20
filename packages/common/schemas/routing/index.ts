@@ -83,19 +83,31 @@ export const ORSPayloadSchema = v.looseObject({
 });
 export type ORSPayload = v.InferOutput<typeof ORSPayloadSchema>;
 
-export const GraphHopperResponseSchema = v.looseObject({
-  hints: v.looseObject({
-    'visited_nodes.sum': v.number(),
-    'visited_nodes.average': v.number(),
-  }),
-  info: v.looseObject({
-    copyrights: v.array(v.string()),
-    took: v.number(),
-  }),
-  paths: v.array(PathSchema),
-});
-export type GraphHopperResponse = v.InferOutput<
-  typeof GraphHopperResponseSchema
+export const GraphHopperSuccessResponseSchema =
+  v.looseObject({
+    hints: v.looseObject({
+      'visited_nodes.sum': v.number(),
+      'visited_nodes.average': v.number(),
+    }),
+    info: v.looseObject({
+      copyrights: v.array(v.string()),
+      took: v.number(),
+    }),
+    paths: v.array(PathSchema),
+  });
+
+export const GraphHopperErrorResponseSchema = v.looseObject({
+    message: v.string()
+  });
+
+export const GraphHopperResponseSchema = v.union([GraphHopperSuccessResponseSchema, GraphHopperErrorResponseSchema]);
+
+export type GraphHopperSuccessResponse = v.InferOutput<
+  typeof GraphHopperSuccessResponseSchema
+>;
+
+export type GraphHopperErrorResponse = v.InferOutput<
+  typeof GraphHopperErrorResponseSchema
 >;
 
 const InfoSchema = v.looseObject({
